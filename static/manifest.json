@@ -1,0 +1,24 @@
+{
+  "name": "스마트 통신 쉼터 - 대중교통 빅데이터 최적 입지 분석 대시보드",
+  "short_name": "스마트쉼터",
+  "description": "국토교통부 버스정류장 및 공공 Wi-Fi, TourAPI 문화 축제 빅데이터 기반 스마트 쉼터 최적 입지 분석 및 실시간 모바일 음영 진단",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f172a",
+  "theme_color": "#1e293b",
+  "icons": [
+    {
+      "src": "/static/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/static/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

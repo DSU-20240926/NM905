@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>스마트 통신 쉼터 최적 입지 분석 시스템</title>
+    <title>스마트 통신 인프라 맵 (Smart Telecom Map)</title>
     
     <!-- PWA & 안드로이드 모바일 웹 앱 설정 -->
     <link rel="manifest" href="/manifest.json">
@@ -1669,6 +1669,680 @@
 
             .region-grid {
                 grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* ========================================================================== */
+        /* AI 챗봇 플로팅 UI 및 팝업창 스타일 */
+        /* ========================================================================== */
+        #chatbot-fab-container {
+            position: absolute;
+            bottom: 24px;
+            right: 24px;
+            z-index: 1050;
+        }
+
+        #chatbot-fab-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #2563eb, #6366f1);
+            color: #ffffff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 9999px;
+            box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.45), 0 8px 10px -6px rgba(37, 99, 235, 0.2);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 700;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        #chatbot-fab-btn:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 16px 32px -6px rgba(37, 99, 235, 0.55);
+            background: linear-gradient(135deg, #1d4ed8, #4f46e5);
+        }
+
+        #chatbot-fab-btn i {
+            font-size: 17px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            border: 2px solid #ffffff;
+            box-shadow: 0 0 6px #10b981;
+            display: inline-block;
+        }
+
+        /* 챗봇 윈도우 모달 */
+        .chatbot-window {
+            position: absolute;
+            bottom: 82px;
+            right: 24px;
+            width: 400px;
+            max-width: calc(100vw - 32px);
+            height: 580px;
+            max-height: calc(100vh - 120px);
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(226, 232, 240, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.22), 0 10px 20px -5px rgba(15, 23, 42, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 1060;
+            opacity: 0;
+            transform: scale(0.92) translateY(20px);
+            pointer-events: none;
+            transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .chatbot-window.active {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            pointer-events: auto;
+        }
+
+        /* 챗봇 헤더 */
+        .chat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 18px;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: #ffffff;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            flex-shrink: 0;
+        }
+
+        .chat-header-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chat-header-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #2563eb, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.4);
+        }
+
+        .chat-header h4 {
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            margin: 0;
+            color: #f8fafc;
+        }
+
+        .chat-header-sub {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 3px;
+        }
+
+        .model-badge {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 7px;
+            border-radius: 9999px;
+            background: rgba(37, 99, 235, 0.25);
+            color: #93c5fd;
+            border: 1px solid rgba(147, 197, 253, 0.3);
+        }
+
+        .region-badge {
+            font-size: 10px;
+            color: #94a3b8;
+        }
+
+        .chat-engine-select {
+            background: rgba(30, 41, 59, 0.85);
+            color: #93c5fd;
+            border: 1px solid rgba(147, 197, 253, 0.35);
+            border-radius: 9999px;
+            padding: 2px 7px;
+            font-size: 10.5px;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.18s;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .chat-engine-select:hover {
+            background: rgba(37, 99, 235, 0.25);
+            border-color: #60a5fa;
+            color: #bfdbfe;
+        }
+
+        .chat-engine-select option {
+            background: #0f172a;
+            color: #f1f5f9;
+        }
+
+        .chat-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .chat-action-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #cbd5e1;
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            transition: all 0.18s;
+        }
+
+        .chat-action-btn:hover {
+            background: rgba(255, 255, 255, 0.22);
+            color: #ffffff;
+        }
+
+        /* 브라우저 스타일 멀티 대화 탭 바 */
+        .chat-tabs-bar {
+            display: flex;
+            align-items: center;
+            background: #0f172a;
+            padding: 5px 12px 0;
+            border-bottom: 1px solid #cbd5e1;
+            flex-shrink: 0;
+            gap: 6px;
+        }
+
+        .chat-tabs-list {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            flex: 1 1 0;
+            min-width: 0;
+        }
+
+        .chat-tabs-list::-webkit-scrollbar {
+            display: none;
+        }
+
+        .chat-tab {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.08);
+            color: #94a3b8;
+            padding: 5px 9px;
+            border-radius: 7px 7px 0 0;
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            white-space: nowrap;
+            max-width: 125px;
+            border: 1px solid transparent;
+            border-bottom: none;
+            transition: all 0.15s ease;
+            user-select: none;
+        }
+
+        .chat-tab:hover {
+            background: rgba(255, 255, 255, 0.16);
+            color: #f8fafc;
+        }
+
+        .chat-tab.active {
+            background: #f1f5f9;
+            color: #0f172a;
+            font-weight: 700;
+            border-color: #cbd5e1;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.08);
+        }
+
+        .chat-tab-title {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex: 1 1 auto;
+        }
+
+        .chat-tab-close {
+            background: transparent;
+            border: none;
+            color: inherit;
+            opacity: 0.55;
+            font-size: 13px;
+            line-height: 1;
+            cursor: pointer;
+            padding: 0 2px;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s ease;
+        }
+
+        .chat-tab-close:hover {
+            opacity: 1;
+            background: rgba(239, 68, 68, 0.18);
+            color: #ef4444;
+        }
+
+        .chat-new-tab-btn {
+            background: rgba(255, 255, 255, 0.12);
+            border: none;
+            color: #cbd5e1;
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            flex-shrink: 0;
+            margin-bottom: 2px;
+            transition: all 0.18s;
+        }
+
+        .chat-new-tab-btn:hover {
+            background: #2563eb;
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        /* 추천 질문 칩 */
+        .chat-chips-container {
+            display: flex;
+            gap: 6px;
+            padding: 8px 14px;
+            background: #f1f5f9;
+            border-bottom: 1px solid #e2e8f0;
+            overflow-x: auto;
+            white-space: nowrap;
+            scrollbar-width: none;
+            flex-shrink: 0;
+        }
+
+        .chat-chips-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .chat-chip {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            padding: 5px 11px;
+            border-radius: 9999px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #334155;
+            cursor: pointer;
+            transition: all 0.18s;
+            flex-shrink: 0;
+        }
+
+        .chat-chip:hover {
+            background: #2563eb;
+            color: #ffffff;
+            border-color: #2563eb;
+            transform: translateY(-1px);
+        }
+
+        /* 음성 인식 안내 배너 */
+        .voice-banner {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 16px;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 600;
+            position: relative;
+            animation: fadeInDown 0.2s ease-out;
+        }
+
+        .voice-pulse-ring {
+            width: 10px;
+            height: 10px;
+            background: #ffffff;
+            border-radius: 50%;
+            animation: pulseRecord 1.2s infinite;
+        }
+
+        @keyframes pulseRecord {
+            0% { transform: scale(0.9); opacity: 1; }
+            50% { transform: scale(1.4); opacity: 0.4; }
+            100% { transform: scale(0.9); opacity: 1; }
+        }
+
+        .voice-cancel-btn {
+            margin-left: auto;
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        /* 메시지 목록 */
+        .chat-messages-area {
+            flex: 1;
+            padding: 14px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: #f8fafc;
+        }
+
+        .chat-bubble-wrapper {
+            display: flex;
+            gap: 8px;
+            max-width: 90%;
+            animation: fadeInMsg 0.2s ease-out;
+        }
+
+        .chat-bubble-wrapper.bot {
+            align-self: flex-start;
+        }
+
+        .chat-bubble-wrapper.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .chat-bubble-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: #e2e8f0;
+            color: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .chat-bubble-content {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .chat-text {
+            padding: 10px 14px;
+            border-radius: 14px;
+            font-size: 12.5px;
+            line-height: 1.6;
+            word-break: break-word;
+        }
+
+        .bot .chat-text {
+            background: #ffffff;
+            color: #1e293b;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+            border-top-left-radius: 4px;
+        }
+
+        .user .chat-text {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: #ffffff;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+            border-top-right-radius: 4px;
+        }
+
+        .chat-meta {
+            font-size: 10px;
+            color: #94a3b8;
+            padding: 0 4px;
+        }
+
+        .user .chat-meta {
+            text-align: right;
+        }
+
+        /* 챗 텍스트 내부 마크다운 요소 */
+        .chat-text strong {
+            color: #0f172a;
+            font-weight: 700;
+        }
+        .user .chat-text strong {
+            color: #ffffff;
+        }
+        .chat-text ul {
+            margin: 4px 0 4px 16px;
+            padding: 0;
+        }
+        .chat-text li {
+            margin-bottom: 3px;
+        }
+        .chat-text p {
+            margin-bottom: 6px;
+        }
+        .chat-text p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* 실시간 한 글자 스트리밍 깜빡임 커서 */
+        .streaming-cursor {
+            display: inline-block;
+            color: #2563eb;
+            font-weight: 800;
+            margin-left: 2px;
+            animation: blinkCursor 0.7s infinite;
+        }
+        @keyframes blinkCursor {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* 타이핑 인디케이터 */
+        .typing-indicator-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 14px 10px;
+            background: #f8fafc;
+        }
+
+        .typing-bubble {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            padding: 8px 14px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background: #94a3b8;
+            border-radius: 50%;
+            animation: bounceDot 1.4s infinite ease-in-out both;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes bounceDot {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        .typing-label {
+            font-size: 11px;
+            color: #64748b;
+            margin-left: 6px;
+        }
+
+        /* 하단 입력 바 */
+        .chat-input-bar {
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            padding: 10px 14px;
+            background: #ffffff;
+            border-top: 1px solid #e2e8f0;
+            flex-shrink: 0;
+        }
+
+        #chat-input-field {
+            flex: 1;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            padding: 9px 12px;
+            font-size: 13px;
+            resize: none;
+            outline: none;
+            max-height: 80px;
+            line-height: 1.4;
+            transition: border-color 0.2s;
+        }
+
+        #chat-input-field:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+
+        .chat-input-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.18s;
+            flex-shrink: 0;
+            font-size: 14px;
+        }
+
+        .mic-btn {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .mic-btn:hover {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+
+        .mic-btn.recording {
+            background: #ef4444 !important;
+            color: #ffffff !important;
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.25);
+            animation: pulseMic 1.2s infinite;
+        }
+
+        @keyframes pulseMic {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+            100% { transform: scale(1); }
+        }
+
+        .send-btn {
+            background: #2563eb;
+            color: #ffffff;
+        }
+
+        .send-btn:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        @keyframes fadeInMsg {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 모바일 및 저해상도 화면 반응형 (가상 키보드 팝업 시 상단 칩 짤림 및 화면 찌그러짐 완벽 방지) */
+        @media (max-width: 768px), (max-height: 720px) {
+            #chatbot-fab-container {
+                bottom: 76px;
+                right: 14px;
+            }
+            .chatbot-window {
+                position: fixed !important;
+                top: 10px !important;
+                bottom: 76px !important;
+                left: 8px !important;
+                right: 8px !important;
+                width: auto !important;
+                max-width: none !important;
+                height: auto !important;
+                max-height: calc(100dvh - 86px) !important;
+                border-radius: 18px;
+                box-shadow: 0 12px 35px -5px rgba(0, 0, 0, 0.45);
+                display: flex !important;
+                flex-direction: column !important;
+                overflow: hidden !important;
+            }
+            .chat-header {
+                padding: 10px 14px;
+                flex-shrink: 0 !important;
+            }
+            .chat-tabs-bar {
+                padding: 4px 8px 0;
+                flex-shrink: 0 !important;
+            }
+            .chat-tab {
+                padding: 4px 7px;
+                font-size: 10.5px;
+                max-width: 100px;
+                flex-shrink: 0 !important;
+            }
+            .chat-chips-container {
+                padding: 6px 10px;
+                flex-shrink: 0 !important;
+                display: flex !important;
+                flex-wrap: nowrap !important;
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch;
+                position: sticky;
+                top: 0;
+                z-index: 10;
+            }
+            .chat-chip {
+                padding: 4px 10px;
+                font-size: 11px;
+                flex-shrink: 0 !important;
+                white-space: nowrap !important;
+            }
+            .chat-messages-area {
+                flex: 1 1 0 !important;
+                min-height: 60px !important;
+                overflow-y: auto !important;
+                -webkit-overflow-scrolling: touch;
+            }
+            .chat-input-bar {
+                padding: 8px 10px;
+                flex-shrink: 0 !important;
             }
         }
     </style>
@@ -4480,6 +5154,838 @@
                 console.warn('데이터셋 상태 조회 실패:', e);
             }
         }
+
+        // ==============================================================================
+        // 5. AI 챗봇 클라이언트 로직 (멀티 세션 탭, 로컬스토리지 영구 보존 & 음성/텍스트 질의)
+        // ==============================================================================
+        const CHAT_STORAGE_KEY = 'smart_telecom_chat_sessions_v2';
+
+        let isChatbotOpen = false;
+        let isChatbotLoading = false;
+        let speechRecognitionInstance = null;
+        let isSpeechRecording = false;
+
+        // 대화 세션 상태 (멀티 탭 & 로컬스토리지 영구 저장)
+        let chatState = {
+            activeTabId: null,
+            selectedEngine: 'auto', // 'auto', 'local', 'gemini'
+            tabs: []
+        };
+
+        function getWelcomeMessage() {
+            return {
+                id: 'msg_welcome',
+                sender: 'bot',
+                text: '안녕하세요! **스마트 통신 인프라 AI 어시스턴트**입니다. 📶\n\n지도 상의 공공 Wi-Fi 커버리지, 버스정류장 음영 현황, 축제 인파 지연 등 궁금한 점을 **직접 타이핑**하시거나 **마이크(🎤) 버튼을 눌러 음성**으로 자유롭게 질문해 보세요!',
+                meta: '시스템 안내'
+            };
+        }
+
+        // 대화 세션 로컬스토리지 복원 및 초기화
+        function initChatSessions() {
+            try {
+                const saved = localStorage.getItem(CHAT_STORAGE_KEY);
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    if (parsed && Array.isArray(parsed.tabs) && parsed.tabs.length > 0) {
+                        chatState.tabs = parsed.tabs;
+                        chatState.activeTabId = parsed.activeTabId || parsed.tabs[0].id;
+                        chatState.selectedEngine = parsed.selectedEngine || 'auto';
+                    }
+                }
+            } catch (e) {
+                console.warn('대화 세션 로드 실패:', e);
+            }
+
+            if (!chatState.tabs || chatState.tabs.length === 0) {
+                const initialTabId = 'tab_' + Date.now();
+                chatState.tabs = [{
+                    id: initialTabId,
+                    title: '새 대화',
+                    createdAt: Date.now(),
+                    messages: [getWelcomeMessage()]
+                }];
+                chatState.activeTabId = initialTabId;
+                chatState.selectedEngine = 'auto';
+                saveChatState();
+            }
+
+            // 엔진 선택 dropdown UI 동기화
+            const engineSel = document.getElementById('chat-engine-select');
+            if (engineSel && chatState.selectedEngine) {
+                engineSel.value = chatState.selectedEngine;
+            }
+
+            renderChatTabsUI();
+            renderActiveTabMessagesUI();
+        }
+
+        // 대화 세션 로컬스토리지 저장
+        function saveChatState() {
+            try {
+                localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify({
+                    activeTabId: chatState.activeTabId,
+                    selectedEngine: chatState.selectedEngine || 'auto',
+                    tabs: chatState.tabs
+                }));
+            } catch (e) {
+                console.warn('대화 세션 저장 실패:', e);
+            }
+        }
+
+        // 현재 활성화된 탭 객체 반환
+        function getActiveTab() {
+            let tab = chatState.tabs.find(t => t.id === chatState.activeTabId);
+            if (!tab && chatState.tabs.length > 0) {
+                tab = chatState.tabs[0];
+                chatState.activeTabId = tab.id;
+            }
+            return tab;
+        }
+
+        // 브라우저 스타일 멀티 탭 목록 렌더링
+        function renderChatTabsUI() {
+            const listEl = document.getElementById('chat-tabs-list');
+            if (!listEl) return;
+            listEl.innerHTML = '';
+
+            chatState.tabs.forEach((tab, index) => {
+                const tabEl = document.createElement('div');
+                const isActive = tab.id === chatState.activeTabId;
+                tabEl.className = 'chat-tab' + (isActive ? ' active' : '');
+                tabEl.title = tab.title || `대화 ${index + 1}`;
+
+                tabEl.onclick = (e) => {
+                    if (e.target.closest('.chat-tab-close')) return;
+                    switchChatTab(tab.id);
+                };
+
+                const icon = document.createElement('i');
+                icon.className = isActive ? 'fa-solid fa-message' : 'fa-regular fa-message';
+                icon.style.fontSize = '10px';
+
+                const titleSpan = document.createElement('span');
+                titleSpan.className = 'chat-tab-title';
+                titleSpan.innerText = tab.title || `대화 ${index + 1}`;
+
+                const closeBtn = document.createElement('button');
+                closeBtn.className = 'chat-tab-close';
+                closeBtn.innerHTML = '&times;';
+                closeBtn.title = '대화창 닫기';
+                closeBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    closeChatTab(tab.id);
+                };
+
+                tabEl.appendChild(icon);
+                tabEl.appendChild(titleSpan);
+                tabEl.appendChild(closeBtn);
+                listEl.appendChild(tabEl);
+            });
+        }
+
+        // 다른 대화 탭으로 즉시 전환
+        function switchChatTab(tabId) {
+            if (isChatbotLoading) return;
+            chatState.activeTabId = tabId;
+            saveChatState();
+            renderChatTabsUI();
+            renderActiveTabMessagesUI();
+        }
+
+        // 새 대화 탭 추가
+        function addNewChatTab() {
+            if (isChatbotLoading) return;
+            const newTabId = 'tab_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4);
+            const tabNum = chatState.tabs.length + 1;
+            const newTab = {
+                id: newTabId,
+                title: '새 대화 ' + tabNum,
+                createdAt: Date.now(),
+                messages: [getWelcomeMessage()]
+            };
+            chatState.tabs.push(newTab);
+            chatState.activeTabId = newTabId;
+            saveChatState();
+            renderChatTabsUI();
+            renderActiveTabMessagesUI();
+
+            const listEl = document.getElementById('chat-tabs-list');
+            if (listEl) {
+                setTimeout(() => { listEl.scrollLeft = listEl.scrollWidth; }, 50);
+            }
+        }
+
+        // 대화 탭 닫기
+        function closeChatTab(tabId) {
+            if (isChatbotLoading) return;
+            const tabIndex = chatState.tabs.findIndex(t => t.id === tabId);
+            if (tabIndex === -1) return;
+
+            if (chatState.tabs.length <= 1) {
+                chatState.tabs[0].title = '새 대화';
+                chatState.tabs[0].messages = [getWelcomeMessage()];
+                saveChatState();
+                renderChatTabsUI();
+                renderActiveTabMessagesUI();
+                return;
+            }
+
+            chatState.tabs.splice(tabIndex, 1);
+            if (chatState.activeTabId === tabId) {
+                const nextIdx = Math.max(0, tabIndex - 1);
+                chatState.activeTabId = chatState.tabs[nextIdx].id;
+            }
+            saveChatState();
+            renderChatTabsUI();
+            renderActiveTabMessagesUI();
+        }
+
+        // 현재 대화 탭 메시지 초기화
+        function clearCurrentChatTab() {
+            if (!confirm('현재 탭의 대화 내용을 모두 지우시겠습니까?')) return;
+            const activeTab = getActiveTab();
+            if (activeTab) {
+                activeTab.title = '새 대화';
+                activeTab.messages = [getWelcomeMessage()];
+                saveChatState();
+                renderChatTabsUI();
+                renderActiveTabMessagesUI();
+            }
+        }
+
+        // 활성 탭의 저장된 메시지들을 화면에 렌더링
+        function renderActiveTabMessagesUI() {
+            const container = document.getElementById('chat-messages');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const activeTab = getActiveTab();
+            if (!activeTab || !activeTab.messages) return;
+
+            activeTab.messages.forEach(msg => {
+                appendChatMessageDOM(msg.sender, msg.text, msg.meta, false);
+            });
+            scrollChatToBottom();
+        }
+
+        // AI 모델 변경 이벤트 핸들러
+        function onChatEngineChanged(newEngine) {
+            chatState.selectedEngine = newEngine || 'auto';
+            saveChatState();
+            updateChatbotStatusHeader();
+        }
+
+        // 챗봇 열기/닫기 토글
+        function toggleChatbot() {
+            const card = document.getElementById('chatbot-card');
+            if (!card) return;
+            isChatbotOpen = !isChatbotOpen;
+            if (isChatbotOpen) {
+                card.classList.add('active');
+                initChatSessions();
+                updateChatbotStatusHeader();
+            } else {
+                card.classList.remove('active');
+                if (isSpeechRecording) stopVoiceRecognition();
+            }
+        }
+
+        // 챗봇 모델 및 지역 상태 헬스체크 갱신
+        async function updateChatbotStatusHeader() {
+            const badge = document.getElementById('chat-model-badge');
+            const statusDot = document.getElementById('chatbot-status-dot');
+            const engineSelect = document.getElementById('chat-engine-select');
+
+            // 1. 현재 지도 지역명 표시 (안전 참조)
+            const regBadge = document.getElementById('chat-region-badge');
+            if (regBadge) {
+                try {
+                    const regCode = (typeof currentRegionCode !== 'undefined' && currentRegionCode) ? currentRegionCode : 'busan';
+                    const regMeta = (typeof regionsMeta !== 'undefined' && regionsMeta && regionsMeta[regCode]) ? regionsMeta[regCode] : null;
+                    regBadge.innerText = (regMeta && regMeta.name) ? regMeta.name : (regCode === 'busan' ? '부산광역시' : regCode);
+                } catch (e) {
+                    regBadge.innerText = '선택 지역';
+                }
+            }
+
+            const currentEnginePref = chatState.selectedEngine || 'auto';
+            if (engineSelect) engineSelect.value = currentEnginePref;
+
+            if (currentEnginePref === 'gemini') {
+                if (badge) {
+                    badge.innerText = '⚡ 클라우드 AI (Gemini 3.5)';
+                    badge.style.background = 'rgba(37, 99, 235, 0.25)';
+                    badge.style.color = '#93c5fd';
+                    badge.style.borderColor = 'rgba(147, 197, 253, 0.35)';
+                }
+                if (statusDot) {
+                    statusDot.style.background = '#3b82f6';
+                    statusDot.style.boxShadow = '0 0 8px #3b82f6';
+                }
+                return;
+            }
+
+            if (badge) {
+                badge.innerText = '🔍 서버 연결 확인 중...';
+                badge.style.background = 'rgba(148, 163, 184, 0.2)';
+                badge.style.color = '#cbd5e1';
+            }
+
+            try {
+                // 서버의 /api/chat/health를 통해 전용 서버 LLM 생존 여부 초고속 판별
+                const res = await fetch('/api/chat/health');
+                const json = await res.json();
+                if (json.status === 'success') {
+                    if (badge) {
+                        if (json.local_alive) {
+                            badge.innerText = currentEnginePref === 'local' ? '🖥️ 전용 서버 LLM' : '🔄 자동 (서버 LLM)';
+                            badge.style.background = 'rgba(16, 185, 129, 0.25)';
+                            badge.style.color = '#6ee7b7';
+                            badge.style.borderColor = 'rgba(110, 231, 183, 0.35)';
+                            if (statusDot) {
+                                statusDot.style.background = '#10b981';
+                                statusDot.style.boxShadow = '0 0 8px #10b981';
+                            }
+                        } else {
+                            if (currentEnginePref === 'local') {
+                                badge.innerText = '⚠️ 서버 LLM 오프라인';
+                                badge.style.background = 'rgba(239, 68, 68, 0.25)';
+                                badge.style.color = '#fca5a5';
+                                badge.style.borderColor = 'rgba(239, 68, 68, 0.35)';
+                                if (statusDot) {
+                                    statusDot.style.background = '#ef4444';
+                                    statusDot.style.boxShadow = '0 0 8px #ef4444';
+                                }
+                            } else {
+                                badge.innerText = '⚡ Gemini 3.5 (서버 대체)';
+                                badge.style.background = 'rgba(37, 99, 235, 0.25)';
+                                badge.style.color = '#93c5fd';
+                                badge.style.borderColor = 'rgba(147, 197, 253, 0.35)';
+                                if (statusDot) {
+                                    statusDot.style.background = '#3b82f6';
+                                    statusDot.style.boxShadow = '0 0 8px #3b82f6';
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (e) {
+                console.warn('서버 헬스체크 실패, 클라우드 AI 적용:', e);
+                if (badge) {
+                    badge.innerText = '⚡ 클라우드 AI (Gemini 3.5)';
+                    badge.style.background = 'rgba(37, 99, 235, 0.25)';
+                    badge.style.color = '#93c5fd';
+                }
+                if (statusDot) {
+                    statusDot.style.background = '#3b82f6';
+                }
+            }
+        }
+
+        // 빠른 추천 질문 클릭
+        function sendQuickPrompt(promptText) {
+            const inputEl = document.getElementById('chat-input-field');
+            if (inputEl) {
+                inputEl.value = promptText;
+                submitChatMessage();
+            }
+        }
+
+        // 텍스트 영역 키보드 입력 핸들러 (Enter 전송 / Shift+Enter 줄바꿈)
+        function handleChatInputKeyDown(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                submitChatMessage();
+            }
+        }
+
+        // 실시간 스트리밍 전용 봇 말풍선 동적 생성
+        function createStreamingBotBubble() {
+            const container = document.getElementById('chat-messages');
+            if (!container) return null;
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'chat-bubble-wrapper bot';
+
+            const avatar = document.createElement('div');
+            avatar.className = 'chat-bubble-avatar';
+            avatar.innerHTML = '<i class="fa-solid fa-robot"></i>';
+
+            const content = document.createElement('div');
+            content.className = 'chat-bubble-content';
+
+            const textDiv = document.createElement('div');
+            textDiv.className = 'chat-text';
+            textDiv.innerHTML = '<span class="streaming-cursor">▌</span>';
+
+            const metaDiv = document.createElement('div');
+            metaDiv.className = 'chat-meta';
+            metaDiv.innerText = '통신 인프라 분석 중...';
+
+            content.appendChild(textDiv);
+            content.appendChild(metaDiv);
+            wrapper.appendChild(avatar);
+            wrapper.appendChild(content);
+            container.appendChild(wrapper);
+
+            return { botBubble: wrapper, textElement: textDiv, metaElement: metaDiv };
+        }
+
+        // 챗봇 메시지 전송 (실시간 SSE 토큰 스트리밍 및 로컬스토리지 영구 보존)
+        async function submitChatMessage() {
+            if (isChatbotLoading) return;
+            const inputEl = document.getElementById('chat-input-field');
+            if (!inputEl) return;
+            const message = inputEl.value.trim();
+            if (!message) return;
+
+            // 음성 인식 중이면 중지
+            if (isSpeechRecording) stopVoiceRecognition();
+
+            // 활성 탭 가져오기
+            const activeTab = getActiveTab();
+            if (!activeTab) return;
+
+            const sendTime = new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
+
+            // 유저 말풍선 DOM 추가 및 세션 배열 저장
+            appendChatMessageDOM('user', message, sendTime);
+            activeTab.messages.push({
+                id: 'msg_' + Date.now(),
+                sender: 'user',
+                text: message,
+                meta: sendTime
+            });
+
+            // 첫 사용자 질문일 경우 탭 제목을 질문 내용으로 자동 명명
+            if (!activeTab.title || activeTab.title.startsWith('새 대화')) {
+                activeTab.title = message.length > 10 ? message.slice(0, 10) + '...' : message;
+            }
+            saveChatState();
+            renderChatTabsUI();
+
+            inputEl.value = '';
+            inputEl.style.height = 'auto';
+
+            // 로딩 상태 설정
+            isChatbotLoading = true;
+            const indicator = document.getElementById('chat-typing-indicator');
+            if (indicator) indicator.style.display = 'flex';
+            scrollChatToBottom();
+
+            // 현재 지도 중심좌표 및 사용자 위치 수집 (안전 참조)
+            let lat = null;
+            let lng = null;
+            try {
+                if (typeof _lastGpsLat === 'number' && typeof _lastGpsLon === 'number' && _lastGpsLat !== 0) {
+                    lat = _lastGpsLat;
+                    lng = _lastGpsLon;
+                } else if (typeof userLocationMarker !== 'undefined' && userLocationMarker && typeof userLocationMarker.getLatLng === 'function') {
+                    const pos = userLocationMarker.getLatLng();
+                    lat = pos.lat;
+                    lng = pos.lng;
+                } else if (typeof map !== 'undefined' && map && typeof map.getCenter === 'function') {
+                    const center = map.getCenter();
+                    lat = center.getLat ? center.getLat() : center.lat;
+                    lng = center.getLng ? center.getLng() : center.lng;
+                }
+            } catch (posErr) {
+                console.warn('위치 좌표 수집 예외:', posErr);
+            }
+
+            const currentRegCode = (typeof currentRegionCode !== 'undefined' && currentRegionCode) ? currentRegionCode : 'busan';
+            const engineToUse = chatState.selectedEngine || 'auto';
+
+            // 실시간 텍스트 출력용 빈 봇 말풍선 즉시 생성
+            const bubbleObj = createStreamingBotBubble();
+            if (!bubbleObj) {
+                isChatbotLoading = false;
+                if (indicator) indicator.style.display = 'none';
+                return;
+            }
+            const { textElement, metaElement } = bubbleObj;
+
+            try {
+                const response = await fetch('/api/chat/stream', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: message,
+                        lat: lat,
+                        lng: lng,
+                        region: currentRegCode,
+                        engine: engineToUse
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`서버 응답 오류 (HTTP ${response.status})`);
+                }
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder('utf-8');
+                let accumulatedText = '';
+                let currentModelName = 'AI 챗봇';
+                let isFirstChunk = true;
+                let buffer = '';
+
+                while (true) {
+                    const { value, done } = await reader.read();
+                    if (done) break;
+
+                    buffer += decoder.decode(value, { stream: true });
+                    const lines = buffer.split('\n');
+                    buffer = lines.pop();
+
+                    for (const line of lines) {
+                        const trimmed = line.trim();
+                        if (!trimmed.startsWith('data: ')) continue;
+                        const jsonStr = trimmed.slice(6).trim();
+                        if (!jsonStr) continue;
+
+                        try {
+                            const data = JSON.parse(jsonStr);
+                            if (data.type === 'model') {
+                                currentModelName = data.model_name || currentModelName;
+                                metaElement.innerText = `${currentModelName} • 실시간 생성 중...`;
+                            } else if (data.type === 'status') {
+                                metaElement.innerText = data.message || '전환 중...';
+                                // 모델 장애/타임아웃으로 Fallback 전환 시, 이전 모델이 불완전하게 출력하던 텍스트 버퍼를 깨끗이 초기화
+                                if (accumulatedText.length > 0) {
+                                    accumulatedText = '';
+                                    textElement.innerHTML = '<span class="streaming-cursor">▌</span>';
+                                    isFirstChunk = true;
+                                }
+                            } else if (data.type === 'chunk') {
+                                if (isFirstChunk) {
+                                    if (indicator) indicator.style.display = 'none';
+                                    isFirstChunk = false;
+                                }
+                                accumulatedText += data.content;
+                                textElement.innerHTML = formatMarkdownSimple(accumulatedText) + '<span class="streaming-cursor">▌</span>';
+                                scrollChatToBottom();
+                            } else if (data.type === 'done') {
+                                const elapsed = data.elapsed != null ? `${data.elapsed}초` : '';
+                                const nowTime = new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
+                                metaElement.innerText = `${currentModelName} • ${elapsed} • ${nowTime}`;
+                            } else if (data.type === 'error') {
+                                accumulatedText += `\n\n⚠️ ${data.message}`;
+                                textElement.innerHTML = formatMarkdownSimple(accumulatedText);
+                            }
+                        } catch (e) {
+                            // 부분 JSON 파싱 오류 무시
+                        }
+                    }
+                }
+
+                // 스트리밍 완료 처리 및 탭 세션 영구 저장
+                if (indicator) indicator.style.display = 'none';
+                isChatbotLoading = false;
+                if (!accumulatedText.trim()) {
+                    textElement.innerHTML = '⚠️ 답변 데이터를 정상적으로 수신하지 못했습니다. 다시 시도해 주세요.';
+                    accumulatedText = '⚠️ 답변 데이터를 정상적으로 수신하지 못했습니다. 다시 시도해 주세요.';
+                } else {
+                    textElement.innerHTML = formatMarkdownSimple(accumulatedText);
+                }
+                scrollChatToBottom();
+
+                // 탭 메시지 배열에 봇 답변 기록 및 로컬스토리지 동기화
+                activeTab.messages.push({
+                    id: 'msg_' + Date.now(),
+                    sender: 'bot',
+                    text: accumulatedText,
+                    meta: metaElement.innerText
+                });
+                saveChatState();
+
+            } catch (err) {
+                console.error('[챗봇 스트리밍 오류]', err);
+                if (indicator) indicator.style.display = 'none';
+                isChatbotLoading = false;
+                const errMsg = `⚠️ 답변 처리 중 오류가 발생했습니다: ${escapeHtml(err.message || '네트워크 오류')}`;
+                textElement.innerHTML = errMsg;
+                metaElement.innerText = '통신 오류';
+                scrollChatToBottom();
+
+                activeTab.messages.push({
+                    id: 'msg_' + Date.now(),
+                    sender: 'bot',
+                    text: errMsg,
+                    meta: '통신 오류'
+                });
+                saveChatState();
+            }
+        }
+
+        // 말풍선 DOM 동적 렌더링
+        function appendChatMessageDOM(sender, text, metaText, shouldScroll = true) {
+            const container = document.getElementById('chat-messages');
+            if (!container) return;
+
+            const wrapper = document.createElement('div');
+            wrapper.className = `chat-bubble-wrapper ${sender}`;
+
+            const avatar = document.createElement('div');
+            avatar.className = 'chat-bubble-avatar';
+            avatar.innerHTML = sender === 'user' ? '<i class="fa-solid fa-user"></i>' : '<i class="fa-solid fa-robot"></i>';
+
+            const content = document.createElement('div');
+            content.className = 'chat-bubble-content';
+
+            const textDiv = document.createElement('div');
+            textDiv.className = 'chat-text';
+            textDiv.innerHTML = sender === 'user' ? escapeHtml(text).replace(/\n/g, '<br>') : formatMarkdownSimple(text);
+
+            const metaDiv = document.createElement('div');
+            metaDiv.className = 'chat-meta';
+            const nowTime = new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
+            metaDiv.innerText = metaText ? `${metaText}` : nowTime;
+
+            content.appendChild(textDiv);
+            content.appendChild(metaDiv);
+            wrapper.appendChild(avatar);
+            wrapper.appendChild(content);
+
+            container.appendChild(wrapper);
+            if (shouldScroll) scrollChatToBottom();
+        }
+
+        function scrollChatToBottom() {
+            const container = document.getElementById('chat-messages');
+            if (container) {
+                setTimeout(() => {
+                    container.scrollTop = container.scrollHeight;
+                }, 50);
+            }
+        }
+
+        function clearChatHistory() {
+            clearCurrentChatTab();
+        }
+
+        function escapeHtml(str) {
+            return (str || '').replace(/[&<>'"]/g, tag => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+            }[tag] || tag));
+        }
+
+        // 가벼운 마크다운 파서 (bold, lists, headers, linebreaks)
+        function formatMarkdownSimple(md) {
+            if (!md) return '';
+            let html = md;
+            html = html.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            html = html.replace(/^### (.*$)/gim, '<div style="font-weight:800; font-size:13.5px; margin:6px 0 3px; color:#0f172a;">$1</div>');
+            html = html.replace(/^## (.*$)/gim, '<div style="font-weight:800; font-size:14px; margin:8px 0 4px; color:#0f172a;">$1</div>');
+            html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            html = html.replace(/^\s*[-*]\s+(.*$)/gim, '<li style="margin-left:14px; margin-bottom:2px;">$1</li>');
+            html = html.replace(/\n\n/g, '<div style="height:6px;"></div>');
+            html = html.replace(/\n/g, '<br>');
+            return html;
+        }
+
+        // ==============================================================================
+        // 한국어 음성 인식 (STT - Web Speech API)
+        // ==============================================================================
+        function toggleVoiceRecognition() {
+            if (isSpeechRecording) {
+                stopVoiceRecognition();
+            } else {
+                startVoiceRecognition();
+            }
+        }
+
+        function startVoiceRecognition() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                alert('현재 브라우저에서는 음성 인식을 지원하지 않습니다. Chrome 또는 Edge 브라우저를 사용해주세요.');
+                return;
+            }
+
+            try {
+                if (!speechRecognitionInstance) {
+                    speechRecognitionInstance = new SpeechRecognition();
+                    speechRecognitionInstance.lang = 'ko-KR';
+                    speechRecognitionInstance.continuous = false;
+                    speechRecognitionInstance.interimResults = true;
+                    speechRecognitionInstance.maxAlternatives = 1;
+
+                    speechRecognitionInstance.onstart = function() {
+                        isSpeechRecording = true;
+                        updateMicUi(true);
+                    };
+
+                    speechRecognitionInstance.onresult = function(event) {
+                        let finalTranscript = '';
+                        let interimTranscript = '';
+                        for (let i = event.resultIndex; i < event.results.length; i++) {
+                            const trans = event.results[i][0].transcript;
+                            if (event.results[i].isFinal) {
+                                finalTranscript += trans;
+                            } else {
+                                interimTranscript += trans;
+                            }
+                        }
+                        const inputEl = document.getElementById('chat-input-field');
+                        if (inputEl) {
+                            inputEl.value = finalTranscript || interimTranscript;
+                            inputEl.style.height = 'auto';
+                            inputEl.style.height = Math.min(inputEl.scrollHeight, 80) + 'px';
+                        }
+                    };
+
+                    speechRecognitionInstance.onerror = function(event) {
+                        console.warn('음성 인식 오류:', event.error);
+                        stopVoiceRecognition();
+                        if (event.error === 'not-allowed') {
+                            alert('마이크 접근 권한이 거부되었습니다. 브라우저 주소창 왼쪽의 자물쇠/설정 아이콘에서 마이크를 허용해주세요.');
+                        }
+                    };
+
+                    speechRecognitionInstance.onend = function() {
+                        stopVoiceRecognition();
+                    };
+                }
+
+                speechRecognitionInstance.start();
+            } catch (err) {
+                console.error('음성 인식 시작 실패:', err);
+                stopVoiceRecognition();
+            }
+        }
+
+        function stopVoiceRecognition() {
+            isSpeechRecording = false;
+            updateMicUi(false);
+            if (speechRecognitionInstance) {
+                try {
+                    speechRecognitionInstance.stop();
+                } catch (e) {}
+            }
+        }
+
+        function updateMicUi(recording) {
+            const micBtn = document.getElementById('chat-mic-btn');
+            const banner = document.getElementById('voice-status-banner');
+            if (micBtn) {
+                if (recording) {
+                    micBtn.classList.add('recording');
+                    micBtn.innerHTML = '<i class="fa-solid fa-stop"></i>';
+                    micBtn.title = '음성 인식 종료';
+                } else {
+                    micBtn.classList.remove('recording');
+                    micBtn.innerHTML = '<i class="fa-solid fa-microphone"></i>';
+                    micBtn.title = '음성으로 질문하기';
+                }
+            }
+            if (banner) {
+                banner.style.display = recording ? 'flex' : 'none';
+            }
+        }
+
+        // 페이지 로드 시 이전 대화 세션 자동 복원 (영구 유지)
+        document.addEventListener('DOMContentLoaded', () => {
+            initChatSessions();
+        });
     </script>
+
+    <!-- ============================================================================== -->
+    <!-- AI 챗봇 플로팅 UI 및 팝업창 (텍스트 직접 입력 & 한국어 음성 인식 STT 완벽 지원) -->
+    <!-- ============================================================================== -->
+    <div id="chatbot-fab-container">
+        <button id="chatbot-fab-btn" onclick="toggleChatbot()" title="스마트 통신 AI 챗봇 열기">
+            <i class="fa-solid fa-robot"></i>
+            <span class="fab-label">AI 챗봇</span>
+            <span id="chatbot-status-dot" class="status-dot"></span>
+        </button>
+    </div>
+
+    <!-- 챗봇 팝업 윈도우 -->
+    <div id="chatbot-card" class="chatbot-window">
+        <!-- 헤더 -->
+        <div class="chat-header">
+            <div class="chat-header-title">
+                <div class="chat-header-icon"><i class="fa-solid fa-robot"></i></div>
+                <div>
+                    <h4>스마트 통신 AI 챗봇</h4>
+                    <div class="chat-header-sub">
+                        <select id="chat-engine-select" onchange="onChatEngineChanged(this.value)" class="chat-engine-select" title="AI 모듈 선택">
+                            <option value="auto">🔄 자동 (서버 LLM 우선)</option>
+                            <option value="local">🖥️ 전용 서버 LLM (EXAONE 3.5)</option>
+                            <option value="gemini">⚡ 클라우드 AI (Gemini 3.5)</option>
+                        </select>
+                        <span id="chat-region-badge" class="region-badge">부산광역시</span>
+                        <span id="chat-model-badge" class="model-badge">연결 확인 중...</span>
+                    </div>
+                </div>
+            </div>
+            <div class="chat-header-actions">
+                <button class="chat-action-btn" onclick="clearCurrentChatTab()" title="현재 탭 대화 지우기"><i class="fa-solid fa-trash-can"></i></button>
+                <button class="chat-action-btn" onclick="toggleChatbot()" title="창 닫기"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+        </div>
+
+        <!-- 브라우저 스타일 멀티 대화 탭 바 -->
+        <div class="chat-tabs-bar">
+            <div class="chat-tabs-list" id="chat-tabs-list">
+                <!-- 동적으로 렌더링되는 탭 목록 -->
+            </div>
+            <button class="chat-new-tab-btn" onclick="addNewChatTab()" title="새 대화창 열기">
+                <i class="fa-solid fa-plus"></i>
+            </button>
+        </div>
+
+        <!-- 추천 질문 칩 -->
+        <div class="chat-chips-container">
+            <button class="chat-chip" onclick="sendQuickPrompt('현재 위치 주변 통신망 커버리지와 정류소 현황, 취약 지점을 분석해 주세요.')">📍 현재 위치 분석</button>
+            <button class="chat-chip" onclick="sendQuickPrompt('현재 선택된 지역에서 가장 시급한 통신 취약지 TOP 3와 선정 이유를 요약해 주세요.')">⚠️ 취약지 TOP 3</button>
+            <button class="chat-chip" onclick="sendQuickPrompt('이 지역의 공공 Wi-Fi 통신사별(KT, SKT, LGU+, 공공) 점유율과 음영률 통계를 알려주세요.')">📶 통신사별 Wi-Fi</button>
+            <button class="chat-chip" onclick="sendQuickPrompt('지역 내 주요 문화/행사 및 축제 인근의 통신 인프라와 혼잡 주의 구간을 알려주세요.')">🎪 축제 인파 영향</button>
+        </div>
+
+        <!-- 음성 인식 활성 배너 -->
+        <div id="voice-status-banner" class="voice-banner" style="display: none;">
+            <div class="voice-pulse-ring"></div>
+            <i class="fa-solid fa-microphone-lines"></i>
+            <span id="voice-status-text">음성을 듣고 있습니다... 말씀하세요</span>
+            <button class="voice-cancel-btn" onclick="stopVoiceRecognition()" title="음성 인식 취소"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <!-- 메시지 목록 -->
+        <div id="chat-messages" class="chat-messages-area">
+            <div class="chat-bubble-wrapper bot">
+                <div class="chat-bubble-avatar"><i class="fa-solid fa-robot"></i></div>
+                <div class="chat-bubble-content">
+                    <div class="chat-text">
+                        안녕하세요! <strong>스마트 통신 인프라 AI 어시스턴트</strong>입니다. 📶<br><br>
+                        지도 상의 공공 Wi-Fi 커버리지, 버스정류장 음영 현황, 축제 인파 지연 등 궁금한 점을 <strong>직접 타이핑</strong>하시거나 <strong>마이크(🎤) 버튼을 눌러 음성</strong>으로 자유롭게 질문해 보세요!
+                    </div>
+                    <div class="chat-meta">시스템 안내</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 타이핑 / 로딩 인디케이터 -->
+        <div id="chat-typing-indicator" class="typing-indicator-row" style="display: none;">
+            <div class="chat-bubble-avatar"><i class="fa-solid fa-robot"></i></div>
+            <div class="typing-bubble">
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+                <span class="typing-label">통신 빅데이터 분석 및 답변 생성 중...</span>
+            </div>
+        </div>
+
+        <!-- 하단 입력 바 -->
+        <div class="chat-input-bar">
+            <textarea id="chat-input-field" rows="1" placeholder="질문 입력 또는 마이크로 말하기..." onkeydown="handleChatInputKeyDown(event)"></textarea>
+            <button id="chat-mic-btn" class="chat-input-btn mic-btn" onclick="toggleVoiceRecognition()" title="음성으로 질문하기">
+                <i class="fa-solid fa-microphone"></i>
+            </button>
+            <button id="chat-send-btn" class="chat-input-btn send-btn" onclick="submitChatMessage()" title="전송">
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
 </body>
 </html>

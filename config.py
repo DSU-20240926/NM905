@@ -267,3 +267,15 @@ REGION_REGISTRY = {
         'keywords': ['전북', '전라북도', '전주', '익산', '군산']
     }
 }
+
+# ==============================================================================
+# 9. AI 챗봇 환경 설정 (로컬 LLM & Gemini 연동)
+# ==============================================================================
+USE_LOCAL_LLM = os.environ.get("USE_LOCAL_LLM", "false").strip().lower() in ("true", "1", "yes", "y")
+OPENWEBUI_BASE_URL = os.environ.get("OPENWEBUI_BASE_URL", "https://ollama.aodd.xyz/api").strip()
+OPENWEBUI_API_KEY = os.environ.get("OPENWEBUI_API_KEY", "").strip()
+OPENWEBUI_MODEL = os.environ.get("OPENWEBUI_MODEL", "exaone3.5:7.8b").strip()
+
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "").strip()
+GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.5-flash-lite").strip()
+

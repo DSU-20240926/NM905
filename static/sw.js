@@ -3,9 +3,8 @@
 // 안드로이드 OS 시스템 트레이 실제 알림(Native Android Notification) & 오프라인 캐시 제어
 // ==============================================================================
 
-const CACHE_NAME = 'smart-shelter-v1';
+const CACHE_NAME = 'smart-shelter-v3';
 const ASSETS_TO_CACHE = [
-    '/',
     '/static/manifest.json',
     '/static/icons/icon-192.png',
     '/static/icons/icon-512.png',
@@ -14,7 +13,7 @@ const ASSETS_TO_CACHE = [
 
 // 1. 서비스 워커 설치 (Install)
 self.addEventListener('install', (event) => {
-    console.log('[SW] Service Worker 설치 중...');
+    console.log('[SW] Service Worker v3 설치 중...');
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
             console.log('[SW] 정적 자산 캐싱 완료');
@@ -23,9 +22,9 @@ self.addEventListener('install', (event) => {
     );
 });
 
-// 2. 서비스 워커 활성화 (Activate)
+// 2. 서비스 워커 활성화 (Activate - 이전 모든 캐시 강제 삭제)
 self.addEventListener('activate', (event) => {
-    console.log('[SW] Service Worker 활성화 완료');
+    console.log('[SW] Service Worker 활성화 완료 (이전 캐시 소멸)');
     event.waitUntil(
         caches.keys().then((keys) => {
             return Promise.all(
@@ -33,6 +32,15 @@ self.addEventListener('activate', (event) => {
             );
         }).then(() => self.clients.claim())
     );
+});
+
+// 2-1. 최신 HTML 네트워크 우선 (Network First)
+self.addEventListener('fetch', (event) => {
+    if (event.request.mode === 'navigate') {
+        event.respondWith(
+            fetch(event.request).catch(() => caches.match(event.request))
+        );
+    }
 });
 
 // 3. 안드로이드 시스템 푸시 이벤트 수신 (Server Push)

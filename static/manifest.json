@@ -1,7 +1,7 @@
 {
-  "name": "스마트 통신 쉼터 - 대중교통 빅데이터 최적 입지 분석 대시보드",
-  "short_name": "스마트쉼터",
-  "description": "국토교통부 버스정류장 및 공공 Wi-Fi, TourAPI 문화 축제 빅데이터 기반 스마트 쉼터 최적 입지 분석 및 실시간 모바일 음영 진단",
+  "name": "스마트 통신 인프라 맵 - 전국 통신망 및 Wi-Fi 분석 플랫폼",
+  "short_name": "통신인프라맵",
+  "description": "국토교통부 버스정류장 및 공공 Wi-Fi, KCA 전파누리 이동통신 기지국, TourAPI 문화 축제 빅데이터 기반 전국 무선 통신 인프라 및 음영 분석 대시보드",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",

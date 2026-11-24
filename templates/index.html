@@ -124,6 +124,34 @@
             border-color: #93c5fd;
         }
 
+        /* 현재 지도 화면(중심 좌표) 기반 지역 변경 버튼 */
+        .btn-region-sync {
+            background: #f0fdf4;
+            color: #15803d;
+            border: 1px solid #bbf7d0;
+            padding: 6px 13px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .btn-region-sync:hover {
+            background: #dcfce7;
+            border-color: #86efac;
+            box-shadow: 0 2px 8px rgba(21, 128, 61, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .btn-region-sync:active {
+            transform: translateY(0);
+        }
+
         .nav-stats {
             display: flex;
             align-items: center;
@@ -1177,12 +1205,22 @@
             font-size: 18px;
         }
 
-        .mobile-nav-btn.active, .mobile-nav-btn:hover {
+        .mobile-nav-btn.active {
             color: #2563eb;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            .mobile-nav-btn:hover {
+                color: #2563eb;
+            }
         }
 
         .mobile-nav-btn.gps-btn {
             color: #059669;
+        }
+
+        .mobile-nav-btn.gps-btn.active {
+            color: #dc2626 !important;
         }
 
         /* 필터 모달 (모바일 & 데스크탑 공용) */
@@ -1255,8 +1293,8 @@
             width: 100%;
         }
 
-        /* 데이터 관리 및 프라이버시 동의 모달 오버레이 */
-        #data-modal-overlay, #track-consent-modal-overlay {
+        /* 데이터 관리, 경로 보관함 및 프라이버시 동의 모달 오버레이 */
+        #data-modal-overlay, #track-consent-modal-overlay, #track-history-modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
@@ -1279,7 +1317,7 @@
             box-sizing: border-box;
         }
 
-        #data-modal-overlay.active, #track-consent-modal-overlay.active {
+        #data-modal-overlay.active, #track-consent-modal-overlay.active, #track-history-modal-overlay.active {
             opacity: 1;
             pointer-events: auto;
         }
@@ -1429,6 +1467,334 @@
             background: #f1f5f9;
         }
 
+        /* 미리주행 (모의 내비게이션 주행 시뮬레이터) HUD 바 */
+        #track-sim-hud {
+            position: absolute;
+            bottom: 85px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1250;
+            background: rgba(15, 23, 42, 0.93);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: #ffffff;
+            border-radius: 16px;
+            padding: 12px 18px;
+            width: calc(100% - 32px);
+            max-width: 480px;
+            box-shadow: 0 14px 35px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            box-sizing: border-box;
+            animation: sim-hud-appear 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes sim-hud-appear {
+            from { opacity: 0; transform: translate(-50%, 15px); }
+            to { opacity: 1; transform: translate(-50%, 0); }
+        }
+
+        .sim-hud-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .sim-hud-title {
+            font-size: 13px;
+            font-weight: 800;
+            color: #f8fafc;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .sim-badge {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .sim-badge.wifi {
+            background: rgba(37, 99, 235, 0.35);
+            color: #93c5fd;
+            border: 1px solid rgba(96, 165, 250, 0.4);
+        }
+
+        .sim-badge.shadow {
+            background: rgba(239, 68, 68, 0.35);
+            color: #fca5a5;
+            border: 1px solid rgba(248, 113, 113, 0.4);
+        }
+
+        .sim-hud-progress {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .sim-hud-slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.2);
+            outline: none;
+            cursor: pointer;
+            accent-color: #38bdf8;
+        }
+
+        .sim-hud-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11.5px;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+
+        .sim-hud-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding-top: 4px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sim-ctrl-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #f8fafc;
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.15s;
+        }
+
+        .sim-ctrl-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .sim-play-btn {
+            background: #2563eb !important;
+            border-color: #3b82f6 !important;
+            color: #ffffff !important;
+            padding: 7px 18px !important;
+            font-size: 13px !important;
+            font-weight: 800 !important;
+            border-radius: 20px !important;
+        }
+
+        .sim-play-btn:hover {
+            background: #1d4ed8 !important;
+        }
+
+        .sim-car-bubble {
+            width: 34px;
+            height: 34px;
+            background: #2563eb;
+            color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.55);
+            border: 2px solid #ffffff;
+            transition: background 0.2s, box-shadow 0.2s;
+        }
+
+        .sim-car-bubble.shadow-zone {
+            background: #ef4444 !important;
+            box-shadow: 0 4px 14px rgba(239, 68, 68, 0.65) !important;
+        }
+
+        /* 날짜별 경로 보관함 아코디언 및 카드 스타일 */
+        .date-accordion-item {
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            background: #ffffff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+            transition: all 0.2s ease;
+        }
+
+        .date-accordion-header {
+            padding: 12px 16px;
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.15s;
+        }
+
+        .date-accordion-header:hover {
+            background: #f1f5f9;
+        }
+
+        .date-accordion-header.open {
+            background: #eff6ff;
+            border-bottom: 1px solid #dbeafe;
+        }
+
+        .date-accordion-header .date-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 800;
+            font-size: 13.5px;
+            color: #0f172a;
+        }
+
+        .date-count-badge {
+            background: #2563eb;
+            color: #ffffff;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 1px 7px;
+            border-radius: 10px;
+        }
+
+        .date-arrow {
+            transition: transform 0.2s ease;
+            color: #64748b;
+        }
+
+        .date-session-container {
+            display: none;
+            padding: 10px 12px;
+            background: #ffffff;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .date-session-container.open {
+            display: flex;
+        }
+
+        .session-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 11px 14px;
+            background: #fafbfc;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: border-color 0.15s;
+        }
+
+        .session-card:hover {
+            border-color: #93c5fd;
+            background: #ffffff;
+        }
+
+        .session-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .session-time-text {
+            font-weight: 800;
+            font-size: 13px;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .session-duration-tag {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: #2563eb;
+            background: #eff6ff;
+            padding: 2px 8px;
+            border-radius: 6px;
+            border: 1px solid #dbeafe;
+        }
+
+        .session-metrics {
+            display: flex;
+            gap: 10px;
+            font-size: 11.5px;
+            color: #64748b;
+            font-weight: 600;
+            flex-wrap: wrap;
+        }
+
+        .session-metrics span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .session-actions {
+            display: flex;
+            gap: 6px;
+            margin-top: 2px;
+        }
+
+        .session-btn {
+            flex: 1;
+            padding: 7px 10px;
+            font-size: 12px;
+            font-weight: 700;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            background: #ffffff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            transition: all 0.15s;
+        }
+
+        .session-btn.primary {
+            background: #2563eb;
+            color: #ffffff;
+            border-color: #2563eb;
+        }
+
+        .session-btn.primary:hover {
+            background: #1d4ed8;
+        }
+
+        .session-btn.sim {
+            background: #eff6ff;
+            color: #1d4ed8;
+            border-color: #bfdbfe;
+        }
+
+        .session-btn.sim:hover {
+            background: #dbeafe;
+        }
+
+        .session-btn.del {
+            flex: 0 0 34px;
+            color: #dc2626;
+            border-color: #fecaca;
+            background: #fef2f2;
+        }
+
+        .session-btn.del:hover {
+            background: #fee2e2;
+        }
+
         /* 모바일 퀵 플로팅 버튼 (데스크탑에서는 숨김) */
         #mobile-map-pills {
             display: none;
@@ -1455,9 +1821,9 @@
                 display: none;
             }
 
-            .btn-region-select {
-                padding: 4px 10px;
-                font-size: 11.5px;
+            .btn-region-select, .btn-region-sync {
+                padding: 4px 8px;
+                font-size: 11px;
             }
 
             .nav-stats {
@@ -1562,8 +1928,8 @@
                 font-size: 12.5px;
             }
 
-            /* ★ 모바일 필터 모달 & 데이터 모달 & 프라이버시 동의 바텀시트 전환 */
-            #filter-modal-overlay, #data-modal-overlay, #track-consent-modal-overlay {
+            /* ★ 모바일 필터 모달 & 데이터 모달 & 프라이버시 동의 & 경로 보관함 바텀시트 전환 */
+            #filter-modal-overlay, #data-modal-overlay, #track-consent-modal-overlay, #track-history-modal-overlay {
                 position: fixed !important;
                 top: 0 !important;
                 left: 0 !important;
@@ -1583,7 +1949,7 @@
                 z-index: 3500 !important;
             }
 
-            #filter-modal-overlay .filter-modal, #data-modal-overlay .filter-modal, #track-consent-modal-overlay .filter-modal {
+            #filter-modal-overlay .filter-modal, #data-modal-overlay .filter-modal, #track-consent-modal-overlay .filter-modal, #track-history-modal-overlay .filter-modal {
                 width: 100% !important;
                 max-width: 100% !important;
                 height: auto !important; /* 짧은 컨텐츠(프라이버시 동의)는 불필요하게 늘어나지 않고 내용에 맞춰 컴팩트하게 정렬 */
@@ -1601,7 +1967,7 @@
                 box-sizing: border-box !important;
             }
 
-            #filter-modal-overlay.active .filter-modal, #data-modal-overlay.active .filter-modal, #track-consent-modal-overlay.active .filter-modal {
+            #filter-modal-overlay.active .filter-modal, #data-modal-overlay.active .filter-modal, #track-consent-modal-overlay.active .filter-modal, #track-history-modal-overlay.active .filter-modal {
                 transform: translateY(0) !important;
             }
 
@@ -1654,6 +2020,18 @@
                 margin: 0 auto !important;
                 z-index: 2700 !important;
                 box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25) !important;
+            }
+
+            #track-sim-hud {
+                bottom: 68px !important;
+                left: 10px !important;
+                right: 10px !important;
+                transform: none !important;
+                width: auto !important;
+                max-width: none !important;
+                padding: 10px 14px !important;
+                border-radius: 14px !important;
+                z-index: 2800 !important;
             }
 
             #mobile-bottom-nav {
@@ -2356,14 +2734,19 @@
                     <i class="fa-solid fa-wifi"></i>
                 </div>
                 <div class="nav-title">
-                    <h1>스마트 통신 쉼터 최적 입지 분석 시스템</h1>
-                    <p>공공 빅데이터 기반 정류장-Wi-Fi 음영 및 최적 입지 분석</p>
+                    <h1>스마트 통신 인프라 맵</h1>
+                    <p>전국 공공 Wi-Fi · 기지국 · 정류소 통합 분석</p>
                 </div>
                 <!-- 현재 지역 선택 드롭다운 버튼 -->
                 <button class="btn-region-select" onclick="openRegionModal()">
                     <i class="fa-solid fa-location-dot"></i>
                     <span id="currentRegionText">{{ current_region.name }}</span>
                     <i class="fa-solid fa-chevron-down" style="font-size:10px;"></i>
+                </button>
+                <!-- 현재 지도 화면(중심 좌표) 기반 지역 자동 탐색 버튼 -->
+                <button class="btn-region-sync" id="btn-region-sync" onclick="syncRegionToMapCenter(true)" title="현재 보고 있는 지도 화면 중심 좌표의 관할 시·도로 전환">
+                    <i class="fa-solid fa-crosshairs"></i>
+                    <span>화면 위치로 탐색</span>
                 </button>
             </div>
 
@@ -2494,23 +2877,63 @@
                         <button onclick="toggleTrackPanel()" class="track-panel-close">✕</button>
                     </div>
                     <div class="track-panel-stats">
-                        <div><b>이동 거리</b><span id="track-stat-distance">0 m</span></div>
+                        <div><b>실시간 거리</b><span id="track-stat-distance">0 m</span></div>
                         <div><b>포인트</b><span id="track-stat-points">0 개</span></div>
                         <div><b>음영 진입</b><span id="track-stat-shadows" style="color:#ef4444;">0 회</span></div>
                     </div>
-                    <div class="track-panel-actions">
-                        <button id="btn-toggle-recording" onclick="toggleTrackRecording()" style="background:#eff6ff; color:#1d4ed8; border-color:#bfdbfe;">
+                    <div class="track-panel-actions" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:8px;">
+                        <button id="btn-toggle-recording" onclick="toggleTrackRecording()" style="background:#eff6ff; color:#1d4ed8; border-color:#bfdbfe; padding:8px 6px;">
                             <i class="fa-solid fa-play" id="icon-toggle-rec"></i> <span id="txt-toggle-recording">기록 시작</span>
                         </button>
-                        <button onclick="toggleTrackVisibility()">
-                            <i class="fa-solid fa-eye" id="icon-toggle-vis"></i> <span id="txt-toggle-visibility">경로 숨김</span>
+                        <button id="btn-pause-recording" onclick="toggleTrackPause()" style="display:none; background:#fef3c7; color:#b45309; border-color:#fde68a; padding:8px 6px;">
+                            <i class="fa-solid fa-pause" id="icon-pause-rec"></i> <span id="txt-pause-recording">일시정지</span>
                         </button>
-                        <button onclick="clearUserTrack()" style="background:#fef2f2; color:#b91c1c; border-color:#fecaca;">
-                            <i class="fa-solid fa-trash-can"></i> 삭제
+                        <button id="btn-open-history" onclick="openTrackHistoryModal()" style="background:#f8fafc; color:#1e293b; border-color:#cbd5e1; padding:8px 6px; grid-column:span 2;">
+                            <i class="fa-solid fa-box-archive" style="color:#2563eb;"></i> <span>경로 보관함</span>
+                        </button>
+                        <button id="btn-clear-loaded-track" onclick="clearLoadedTrackFromMap()" style="display:none; background:#fff1f2; color:#be123c; border-color:#fecdd3; padding:8px 6px; grid-column:span 2;">
+                            <i class="fa-solid fa-eye-slash"></i> <span>불러온 경로 지도에서 지우기</span>
                         </button>
                     </div>
                     <div style="font-size:11px; color:#64748b; text-align:center;">
                         🔒 브라우저 내부(LocalStorage) 안전 보관
+                    </div>
+                </div>
+
+                <!-- 내비게이션 모의 주행 (미리주행) 시뮬레이터 HUD 바 -->
+                <div id="track-sim-hud">
+                    <div class="sim-hud-top">
+                        <div class="sim-hud-title">
+                            <i class="fa-solid fa-car-side" style="color:#38bdf8;"></i>
+                            <span id="sim-hud-label">경로 미리주행</span>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span id="sim-status-badge" class="sim-badge wifi">
+                                <i class="fa-solid fa-wifi"></i> 연결 양호
+                            </span>
+                            <button onclick="stopTrackSimulation(true)" class="track-panel-close" style="color:#cbd5e1; font-size:18px;">✕</button>
+                        </div>
+                    </div>
+                    <div class="sim-hud-progress">
+                        <input type="range" class="sim-hud-slider" id="sim-progress-slider" min="0" max="1000" value="0" oninput="onSimSliderInput(this.value)">
+                        <div class="sim-hud-stats">
+                            <span id="sim-time-display">00:00 / 00:00</span>
+                            <span id="sim-dist-display">0.0 km / 0.0 km</span>
+                        </div>
+                    </div>
+                    <div class="sim-hud-controls">
+                        <button class="sim-ctrl-btn" onclick="restartTrackSimulation()" title="처음부터 다시 주행">
+                            <i class="fa-solid fa-rotate-left"></i> 처음부터
+                        </button>
+                        <button class="sim-ctrl-btn sim-play-btn" id="btn-sim-play-pause" onclick="toggleSimPlayPause()">
+                            <i class="fa-solid fa-play" id="icon-sim-play"></i> <span id="txt-sim-play">재생</span>
+                        </button>
+                        <button class="sim-ctrl-btn" id="btn-sim-speed" onclick="cycleSimSpeed()" title="주행 속도 배속 변경">
+                            <i class="fa-solid fa-bolt" style="color:#f59e0b;"></i> <span id="txt-sim-speed">배속: 1x</span>
+                        </button>
+                        <button class="sim-ctrl-btn" onclick="fitBoundsToActiveTrack()" title="전체 경로 화면 맞춤">
+                            <i class="fa-solid fa-expand"></i>
+                        </button>
                     </div>
                 </div>
 
@@ -2584,7 +3007,7 @@
                         <!-- 정류장 및 추천 레이어 토글 -->
                         <div class="filter-sec-title">🚏 정류장 및 추천 레이어</div>
                         <label class="layer-toggle">
-                            <span>★ 스마트 쉼터 후보지 (Top 10)</span>
+                            <span>★ 통신 우선 확충 후보지 (Top 10)</span>
                             <input type="checkbox" id="layer-top10" checked onchange="handleFilterChange()">
                         </label>
                         <label class="layer-toggle">
@@ -2608,9 +3031,29 @@
                             <input type="checkbox" id="filter-stop-dense" onchange="handleFilterChange()">
                         </label>
                         <label class="layer-toggle">
-                            <span style="color:#9333ea; font-weight:700;">🎉 현재 진행중 문화 축제 (TourAPI)</span>
+                            <span style="color:#9333ea; font-weight:700;">🎉 진행중 문화 축제/행사 (3개 API 통합)</span>
                             <input type="checkbox" id="layer-festivals" checked onchange="handleFilterChange()">
                         </label>
+                        <div class="filter-chip-grid" style="grid-template-columns: repeat(3, 1fr); margin:4px 0 8px 0;">
+                            <label class="filter-chip" title="한국관광공사 TourAPI 4.0">
+                                <input type="checkbox" id="filter-fest-tourapi" checked onchange="handleFilterChange()">
+                                <span class="chip-color-dot" style="background:#9333ea;"></span>
+                                <span>TourAPI</span>
+                                <b class="chip-count" id="cnt-fest-tourapi">0</b>
+                            </label>
+                            <label class="filter-chip" title="전국문화축제 표준데이터">
+                                <input type="checkbox" id="filter-fest-std" checked onchange="handleFilterChange()">
+                                <span class="chip-color-dot" style="background:#059669;"></span>
+                                <span>표준축제</span>
+                                <b class="chip-count" id="cnt-fest-std">0</b>
+                            </label>
+                            <label class="filter-chip" title="한국문화정보원 문화정보">
+                                <input type="checkbox" id="filter-fest-culture" checked onchange="handleFilterChange()">
+                                <span class="chip-color-dot" style="background:#d97706;"></span>
+                                <span>문화정보</span>
+                                <b class="chip-count" id="cnt-fest-culture">0</b>
+                            </label>
+                        </div>
 
                         <!-- 산악지역 이동통신 기지국 (KCA) 레이어 -->
                         <div class="filter-sec-title" style="margin-top:14px;">📡 산악 이동통신 기지국 (KCA)</div>
@@ -2664,6 +3107,68 @@
                                 <b class="chip-count" id="cnt-ms-3g">0</b>
                             </label>
                         </div>
+
+                        <!-- 전국 이동통신 기지국 (도심/주택가 전체 망 - KCA 전파누리 GeoServer WMS/WFS) -->
+                        <div class="filter-sec-title" style="margin-top:14px;">📡 전국 도심/거주지 기지국 (전파누리)</div>
+                        <label class="layer-toggle">
+                            <span>📡 전국 모든 기지국 오버레이 켜기</span>
+                            <input type="checkbox" id="layer-pms-all" onchange="handleFilterChange()">
+                        </label>
+                        <label class="layer-toggle" style="padding-left:10px; font-size:11px; color:#64748b; margin-top:2px;">
+                            <span>ㄴ 🔘 도심 기지국 전파 커버리지 원 (5G: 300m, 4G: 500m)</span>
+                            <input type="checkbox" id="layer-pms-coverage" checked onchange="handleFilterChange()">
+                        </label>
+                        <div style="font-size:11px; font-weight:700; color:#475569; margin:6px 0 3px 0;">[표시 세대 필터]</div>
+                        <div class="filter-chip-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom:8px;">
+                            <label class="filter-chip" title="5G NR 초광대역 기지국 (전국 9.5만국)">
+                                <input type="checkbox" id="filter-pms-5g" checked onchange="handleFilterChange()">
+                                <span class="chip-color-dot" style="background:#8b5cf6;"></span>
+                                <span>5G</span>
+                                <b class="chip-count">9.5만</b>
+                            </label>
+                            <label class="filter-chip" title="4G LTE 이동통신 (전국 97만국)">
+                                <input type="checkbox" id="filter-pms-4g" checked onchange="handleFilterChange()">
+                                <span class="chip-color-dot" style="background:#0284c7;"></span>
+                                <span>4G</span>
+                                <b class="chip-count">97만</b>
+                            </label>
+                            <label class="filter-chip" title="3G 이동통신 (전국 30만국)">
+                                <input type="checkbox" id="filter-pms-3g" checked onchange="handleFilterChange()">
+                                <span class="chip-color-dot" style="background:#f59e0b;"></span>
+                                <span>3G</span>
+                                <b class="chip-count">30만</b>
+                            </label>
+                        </div>
+                        <div style="font-size:11px; font-weight:700; color:#475569; margin:4px 0 3px 0;">[통신사별 필터]</div>
+                        <div class="filter-chip-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom:8px;">
+                            <label class="filter-chip" title="SK텔레콤 전국 기지국 (69만국)">
+                                <input type="checkbox" id="filter-pms-skt" checked onchange="handleFilterChange()">
+                                <span class="chip-color-dot" style="background:#EA002C;"></span>
+                                <span>SKT</span>
+                                <b class="chip-count">69만</b>
+                            </label>
+                            <label class="filter-chip" title="KT 전국 기지국 (43만국)">
+                                <input type="checkbox" id="filter-pms-kt" checked onchange="handleFilterChange()">
+                                <span class="chip-color-dot" style="background:#00A0E9;"></span>
+                                <span>KT</span>
+                                <b class="chip-count">43만</b>
+                            </label>
+                            <label class="filter-chip" title="LG유플러스 전국 기지국 (41만국)">
+                                <input type="checkbox" id="filter-pms-lgu" checked onchange="handleFilterChange()">
+                                <span class="chip-color-dot" style="background:#E6007E;"></span>
+                                <span>LGU+</span>
+                                <b class="chip-count">41만</b>
+                            </label>
+                        </div>
+
+                        <!-- 전세계 기지국 지도 (CellMapper / OpenCelliD 크라우드소싱) -->
+                        <label class="layer-toggle" style="margin-top:6px;">
+                            <span>🌍 전세계 기지국 지도 (OpenCelliD/CellMapper)</span>
+                            <input type="checkbox" id="layer-global-cells" onchange="handleFilterChange()">
+                        </label>
+                        <div style="font-size:10.5px; color:#64748b; padding-left:10px; margin-bottom:6px;">
+                            전세계 크라우드소싱 이동통신 셀 타워 망 (기본 비활성화)
+                        </div>
                     </div>
                 </div>
 
@@ -2672,7 +3177,7 @@
                     <div style="font-weight:800; margin-bottom:6px; color:#0f172a; display:flex; justify-content:space-between; align-items:center;">
                         <span>🗺️ 범례 & 브랜드 색상</span>
                     </div>
-                    <div class="legend-item"><span class="dot top10"></span><b>스마트 쉼터 추천 후보지 (Top 10)</b></div>
+                    <div class="legend-item"><span class="dot top10"></span><b>통신 우선 확충 후보지 (Top 10)</b></div>
                     <div style="font-size:11px; font-weight:700; color:#475569; margin:4px 0 2px 0;">[공공 Wi-Fi 제공 기관별 색상]</div>
                     <div class="legend-item"><span class="dot" style="background:#00A0E9; border:1.5px solid #0077B6;"></span><span>KT (스카이블루)</span></div>
                     <div class="legend-item"><span class="dot" style="background:#FF5000; border:1.5px solid #EA002C;"></span><span>SK텔레콤 (SK 오렌지/레드)</span></div>
@@ -2684,10 +3189,15 @@
                     <div class="legend-item"><span class="dot" style="background:#0284c7; border:1px solid #0369a1;"></span><span style="color:#0369a1; font-weight:700;">📡 4G LTE 산악 기지국 (블루)</span></div>
                     <div class="legend-item"><span class="dot" style="background:#f59e0b; border:1px solid #d97706;"></span><span style="color:#d97706; font-weight:700;">📡 3G 이동통신 기지국 (오렌지)</span></div>
                     <div class="legend-item"><span style="display:inline-block; width:12px; height:12px; border:1.5px dashed #64748b; border-radius:50%; margin-right:6px;"></span><span>기지국 예상 커버리지 원</span></div>
-                    <div style="font-size:11px; font-weight:700; color:#475569; margin:4px 0 2px 0;">[정류소 및 행사]</div>
+                    <div style="font-size:11px; font-weight:700; color:#475569; margin:4px 0 2px 0;">[정류소 · 문화행사 · 이동경로]</div>
                     <div class="legend-item"><span class="dot served"></span><span>Wi-Fi 수혜 정류장 (100m 이내)</span></div>
                     <div class="legend-item"><span class="dot shadow"></span><span>Wi-Fi 음영 정류장 (100m 사각지대)</span></div>
-                    <div class="legend-item"><span class="dot fest" style="background:#9333ea; border:1.5px solid #fff; box-shadow:0 0 5px rgba(147,51,234,0.6);"></span><span style="color:#9333ea; font-weight:700;">진행중 축제/공연지 (TourAPI)</span></div>
+                    <div class="legend-item"><span class="dot fest" style="background:#9333ea; border:1.5px solid #fff;"></span><span style="color:#9333ea; font-weight:700;">축제/행사 (TourAPI)</span></div>
+                    <div class="legend-item"><span class="dot fest" style="background:#059669; border:1.5px solid #fff;"></span><span style="color:#059669; font-weight:700;">전국문화축제 표준데이터</span></div>
+                    <div class="legend-item"><span class="dot fest" style="background:#d97706; border:1.5px solid #fff;"></span><span style="color:#d97706; font-weight:700;">한국문화정보원 행사</span></div>
+                    <div class="legend-item"><span style="display:inline-block; width:16px; height:3px; background:#2563eb; border-radius:2px; margin-right:4px;"></span><span>이동경로 (Wi-Fi 양호 구간)</span></div>
+                    <div class="legend-item"><span style="display:inline-block; width:16px; height:0; border-top:3px dashed #ef4444; margin-right:4px;"></span><span>이동경로 (음영 구간)</span></div>
+                    <div class="legend-item"><span style="display:inline-block; width:16px; height:0; border-top:3px dashed #f59e0b; margin-right:4px;"></span><span>이동경로 (일시정지 공백)</span></div>
                     <div class="legend-item"><span class="dot me"></span><span>내 현재 위치 (GPS)</span></div>
                 </div>
 
@@ -2803,7 +3313,7 @@
                 <div style="margin-bottom:16px;">
                     <div class="filter-sec-title">🚏 버스정류장 및 추천 레이어</div>
                     <label class="layer-toggle" style="margin-bottom:7px;">
-                        <span>★ 스마트 쉼터 추천 후보지 (Top 10)</span>
+                        <span>★ 통신 우선 확충 후보지 (Top 10)</span>
                         <input type="checkbox" id="m-layer-top10" checked onchange="syncFilterAndChange('layer-top10', this.checked)">
                     </label>
                     <label class="layer-toggle" style="margin-bottom:7px;">
@@ -2827,9 +3337,29 @@
                         <input type="checkbox" id="m-filter-stop-dense" onchange="syncFilterAndChange('filter-stop-dense', this.checked)">
                     </label>
                     <label class="layer-toggle" style="margin-bottom:7px;">
-                        <span style="color:#9333ea; font-weight:700;">🎉 문화 축제/행사 (TourAPI 4.0)</span>
+                        <span style="color:#9333ea; font-weight:700;">🎉 문화 축제/행사 (3개 API 통합)</span>
                         <input type="checkbox" id="m-layer-festivals" checked onchange="syncFilterAndChange('layer-festivals', this.checked)">
                     </label>
+                    <div class="filter-chip-grid" style="grid-template-columns: repeat(3, 1fr); margin-top:4px;">
+                        <label class="filter-chip" title="한국관광공사 TourAPI 4.0">
+                            <input type="checkbox" id="m-filter-fest-tourapi" checked onchange="syncFilterAndChange('filter-fest-tourapi', this.checked)">
+                            <span class="chip-color-dot" style="background:#9333ea;"></span>
+                            <span>TourAPI</span>
+                            <b class="chip-count" id="m-cnt-fest-tourapi">0</b>
+                        </label>
+                        <label class="filter-chip" title="전국문화축제 표준데이터">
+                            <input type="checkbox" id="m-filter-fest-std" checked onchange="syncFilterAndChange('filter-fest-std', this.checked)">
+                            <span class="chip-color-dot" style="background:#059669;"></span>
+                            <span>표준축제</span>
+                            <b class="chip-count" id="m-cnt-fest-std">0</b>
+                        </label>
+                        <label class="filter-chip" title="한국문화정보원 문화정보">
+                            <input type="checkbox" id="m-filter-fest-culture" checked onchange="syncFilterAndChange('filter-fest-culture', this.checked)">
+                            <span class="chip-color-dot" style="background:#d97706;"></span>
+                            <span>문화정보</span>
+                            <b class="chip-count" id="m-cnt-fest-culture">0</b>
+                        </label>
+                    </div>
                 </div>
 
                 <!-- 3-2. 산악지역 이동통신 기지국 (KCA 전파누리) -->
@@ -2887,11 +3417,75 @@
                     </div>
                 </div>
 
+                <!-- 3-3. 전국 모든 이동통신 기지국 (도심/주택가 전체 망 - 전파누리 GeoServer WMS/WFS) -->
+                <div style="margin-bottom:16px;">
+                    <div class="filter-sec-title">📡 전국 도심/거주지 기지국 (전파누리)</div>
+                    <label class="layer-toggle" style="margin-bottom:6px;">
+                        <span>📡 전국 모든 기지국 오버레이 켜기</span>
+                        <input type="checkbox" id="m-layer-pms-all" onchange="syncFilterAndChange('layer-pms-all', this.checked)">
+                    </label>
+                    <label class="layer-toggle" style="padding-left:12px; font-size:11.5px; color:#475569; margin-bottom:6px;">
+                        <span>ㄴ 🔘 도심 기지국 전파 커버리지 원 (5G: 300m, 4G: 500m)</span>
+                        <input type="checkbox" id="m-layer-pms-coverage" checked onchange="syncFilterAndChange('layer-pms-coverage', this.checked)">
+                    </label>
+                    <div style="font-size:11.5px; font-weight:700; color:#475569; margin:8px 0 4px 0;">[표시 세대 필터]</div>
+                    <div class="filter-chip-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom:8px;">
+                        <label class="filter-chip" title="5G NR 초광대역 기지국 (전국 9.5만국)">
+                            <input type="checkbox" id="m-filter-pms-5g" checked onchange="syncFilterAndChange('filter-pms-5g', this.checked)">
+                            <span class="chip-color-dot" style="background:#8b5cf6;"></span>
+                            <span>5G</span>
+                            <b class="chip-count">9.5만</b>
+                        </label>
+                        <label class="filter-chip" title="4G LTE 이동통신 (전국 97만국)">
+                            <input type="checkbox" id="m-filter-pms-4g" checked onchange="syncFilterAndChange('filter-pms-4g', this.checked)">
+                            <span class="chip-color-dot" style="background:#0284c7;"></span>
+                            <span>4G</span>
+                            <b class="chip-count">97만</b>
+                        </label>
+                        <label class="filter-chip" title="3G 이동통신 (전국 30만국)">
+                            <input type="checkbox" id="m-filter-pms-3g" checked onchange="syncFilterAndChange('filter-pms-3g', this.checked)">
+                            <span class="chip-color-dot" style="background:#f59e0b;"></span>
+                            <span>3G</span>
+                            <b class="chip-count">30만</b>
+                        </label>
+                    </div>
+                    <div style="font-size:11.5px; font-weight:700; color:#475569; margin:6px 0 4px 0;">[통신사별 필터]</div>
+                    <div class="filter-chip-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom:8px;">
+                        <label class="filter-chip" title="SK텔레콤 전국 기지국 (69만국)">
+                            <input type="checkbox" id="m-filter-pms-skt" checked onchange="syncFilterAndChange('filter-pms-skt', this.checked)">
+                            <span class="chip-color-dot" style="background:#EA002C;"></span>
+                            <span>SKT</span>
+                            <b class="chip-count">69만</b>
+                        </label>
+                        <label class="filter-chip" title="KT 전국 기지국 (43만국)">
+                            <input type="checkbox" id="m-filter-pms-kt" checked onchange="syncFilterAndChange('filter-pms-kt', this.checked)">
+                            <span class="chip-color-dot" style="background:#00A0E9;"></span>
+                            <span>KT</span>
+                            <b class="chip-count">43만</b>
+                        </label>
+                        <label class="filter-chip" title="LG유플러스 전국 기지국 (41만국)">
+                            <input type="checkbox" id="m-filter-pms-lgu" checked onchange="syncFilterAndChange('filter-pms-lgu', this.checked)">
+                            <span class="chip-color-dot" style="background:#E6007E;"></span>
+                            <span>LGU+</span>
+                            <b class="chip-count">41만</b>
+                        </label>
+                    </div>
+
+                    <!-- 전세계 기지국 지도 (CellMapper / OpenCelliD) -->
+                    <label class="layer-toggle" style="margin-bottom:6px;">
+                        <span>🌍 전세계 기지국 지도 (OpenCelliD/CellMapper)</span>
+                        <input type="checkbox" id="m-layer-global-cells" onchange="syncFilterAndChange('layer-global-cells', this.checked)">
+                    </label>
+                    <div style="font-size:11px; color:#64748b; padding-left:12px;">
+                        전세계 크라우드소싱 이동통신 셀 타워 망 (기본 비활성화)
+                    </div>
+                </div>
+
                 <!-- 4. 지도 범례 안내 (모바일에서도 쉽게 확인 가능) -->
                 <div style="margin-bottom:16px;">
                     <div class="filter-sec-title">🗺️ 지도 범례 & 브랜드 색상 안내</div>
                     <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:10px 12px; font-size:11.5px; display:grid; grid-template-columns:repeat(2, 1fr); gap:6px;">
-                        <div class="legend-item" style="grid-column:span 2;"><span class="dot top10"></span><b>스마트 쉼터 Top 10 후보지</b></div>
+                        <div class="legend-item" style="grid-column:span 2;"><span class="dot top10"></span><b>통신 우선 확충 후보지 (Top 10)</b></div>
                         <div class="legend-item"><span class="dot" style="background:#00A0E9; border:1px solid #0077B6;"></span><span>KT (스카이블루)</span></div>
                         <div class="legend-item"><span class="dot" style="background:#FF5000; border:1px solid #EA002C;"></span><span>SKT (오렌지/레드)</span></div>
                         <div class="legend-item"><span class="dot" style="background:#E6007E; border:1px solid #C20067;"></span><span>LGU+ (마젠타)</span></div>
@@ -2903,7 +3497,12 @@
                         <div class="legend-item"><span style="display:inline-block; width:12px; height:12px; border:1.5px dashed #64748b; border-radius:50%; margin-right:4px;"></span><span>예상 커버리지 원</span></div>
                         <div class="legend-item"><span class="dot served"></span><span>Wi-Fi 수혜 정류장</span></div>
                         <div class="legend-item"><span class="dot shadow"></span><span>Wi-Fi 음영 정류장</span></div>
-                        <div class="legend-item" style="grid-column:span 2;"><span class="dot fest" style="background:#9333ea; border:1px solid #fff;"></span><span style="color:#9333ea; font-weight:700;">축제/공연 행사지</span></div>
+                        <div class="legend-item"><span class="dot fest" style="background:#9333ea; border:1px solid #fff;"></span><span style="color:#9333ea; font-weight:700;">TourAPI 행사</span></div>
+                        <div class="legend-item"><span class="dot fest" style="background:#059669; border:1px solid #fff;"></span><span style="color:#059669; font-weight:700;">표준축제 데이터</span></div>
+                        <div class="legend-item" style="grid-column:span 2;"><span class="dot fest" style="background:#d97706; border:1px solid #fff;"></span><span style="color:#d97706; font-weight:700;">한국문화정보원 행사</span></div>
+                        <div class="legend-item"><span style="display:inline-block; width:14px; height:3px; background:#2563eb; border-radius:2px; margin-right:4px;"></span><span>경로 (양호 구간)</span></div>
+                        <div class="legend-item"><span style="display:inline-block; width:14px; height:0; border-top:2.5px dashed #ef4444; margin-right:4px;"></span><span>경로 (음영 구간)</span></div>
+                        <div class="legend-item" style="grid-column:span 2;"><span style="display:inline-block; width:14px; height:0; border-top:2.5px dashed #f59e0b; margin-right:4px;"></span><span>경로 (일시정지 공백)</span></div>
                     </div>
                 </div>
             </div>
@@ -3021,6 +3620,37 @@
         </div>
     </div>
 
+    <!-- 4-4. 저장된 이동경로 날짜별 보관함 모달창 -->
+    <div id="track-history-modal-overlay" onclick="if(event.target === this) closeTrackHistoryModal()">
+        <div class="filter-modal" style="max-width: 500px;">
+            <div class="filter-modal-header">
+                <div class="sidebar-drag-handle" style="margin: 0 auto 10px auto; display: block;" onclick="closeTrackHistoryModal()"></div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                    <h3 style="font-size:16px; font-weight:800; color:#0f172a;">
+                        <i class="fa-solid fa-box-archive" style="color:#2563eb;"></i> 내 이동경로 보관함
+                    </h3>
+                    <button onclick="closeTrackHistoryModal()" style="background:none; border:none; font-size:20px; color:#64748b; cursor:pointer; padding:4px 8px;">✕</button>
+                </div>
+                <div style="font-size:12px; color:#64748b;">
+                    날짜를 클릭하여 저장된 경로의 시작~종료 시간 확인, 지도 불러오기 및 네비게이션 미리주행 시뮬레이션을 실행하세요.
+                </div>
+            </div>
+
+            <div class="filter-modal-body" id="track-history-body" style="padding: 12px 16px; overflow-y: auto; max-height: 60vh;">
+                <!-- 날짜별 아코디언 및 세션 카드 동적 삽입 -->
+            </div>
+
+            <div class="filter-modal-footer" style="display:flex; justify-content:space-between; align-items:center; padding: 12px 16px; border-top: 1px solid #e2e8f0;">
+                <button onclick="clearAllUserTracks()" style="font-size:12px; color:#ef4444; background:none; border:none; cursor:pointer; font-weight:700; display:flex; align-items:center; gap:5px;">
+                    <i class="fa-solid fa-trash-can"></i> 전체 기록 삭제
+                </button>
+                <button onclick="closeTrackHistoryModal()" style="padding:8px 20px; background:#f1f5f9; color:#475569; border:1px solid #cbd5e1; border-radius:8px; font-weight:700; cursor:pointer; font-size:13px;">
+                    닫기
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- 4. 지역 선택 모달창 -->
     <div id="region-modal-overlay">
         <div class="region-modal">
@@ -3055,7 +3685,7 @@
                 </div>
                 <div class="loading-title-wrap">
                     <div class="loading-badge" id="loadingBadge">서울특별시 분석 중</div>
-                    <h3 id="loadingTitle">스마트 통신 쉼터 정밀 공간 분석</h3>
+                    <h3 id="loadingTitle">스마트 통신 인프라 정밀 공간 분석</h3>
                 </div>
             </div>
 
@@ -3145,6 +3775,9 @@
         let layerFestivalGroup = L.layerGroup();
         let layerMountainGroup = L.layerGroup();         // 산악 기지국 마커 전용 레이어
         let layerMountainCoverageGroup = L.layerGroup(); // 산악 기지국 예상 커버리지 원 전용 레이어
+        let layerCityCoverageGroup = L.layerGroup();     // 도심 기지국 전파 커버리지 원 (5G: 300m, 4G: 500m, 3G: 800m)
+        let layerCityStationGroup = L.layerGroup();      // 도심 기지국 벡터 마커
+        let layerGlobalCellsGroup = L.layerGroup();      // 전세계 기지국 (OpenCelliD / CellMapper) 마커 & 커버리지 원
         let userTrackLayerGroup = L.layerGroup();
 
         // 지도 타일 (워터마크 0% 고해상도 상세 지도)
@@ -3212,19 +3845,34 @@
             currentTileLayer = L.tileLayer(tileSources.osm.url, tileSources.osm.options).addTo(map);
 
             layerMountainCoverageGroup.addTo(map); // 산악 기지국 커버리지 원을 가장 아래 배치
+            layerCityCoverageGroup.addTo(map);     // 도심 기지국 전파 커버리지 원
             layerWifiCircleGroup.addTo(map); // 100m 서클을 먼저 등록하여 마커 점 아래에 배치
             layerWifiGroup.addTo(map);
             layerStopsCluster.addTo(map);
             layerTop10Group.addTo(map);
             layerFestivalGroup.addTo(map);
             layerMountainGroup.addTo(map);
+            layerCityStationGroup.addTo(map);      // 도심 기지국 벡터 마커
+            layerGlobalCellsGroup.addTo(map);      // 전세계 기지국 (OpenCelliD/CellMapper)
             if (userTrackLayerGroup) {
                 userTrackLayerGroup.addTo(map);
             }
 
-            // 지도 이동 및 줌 레벨 변경 시 Wi-Fi 100m 서클 동적 렌더링 (LOD 최적화)
-            map.on('moveend', updateVisibleWifiCircles);
-            map.on('zoomend', updateVisibleWifiCircles);
+            // 지도 이동 및 줌 레벨 변경 시 Wi-Fi 100m 서클 및 도심 기지국 커버리지 원 동적 렌더링 (LOD 최적화)
+            map.on('moveend', () => {
+                updateVisibleWifiCircles();
+                updateCityStationCoverageCircles();
+                updateGlobalCellsOverlay();
+                syncRegionToMapCenter();
+            });
+            map.on('zoomend', () => {
+                updateVisibleWifiCircles();
+                updateCityStationCoverageCircles();
+                updateGlobalCellsOverlay();
+            });
+
+            // 전파누리 기지국 WMS 클릭 시 상세정보 팝업 핸들러 연동
+            setupPmsMapClickHandler();
 
             // Flexbox 레이아웃 렌더링 후 지도 타일 깨짐/공백 방지
             setTimeout(() => { if (map) map.invalidateSize(); }, 200);
@@ -3295,7 +3943,7 @@
         // 진행도 모달 제어
         function showLoadingOverlay(regName) {
             document.getElementById('loadingBadge').innerText = `${regName} 정밀 분석 중`;
-            document.getElementById('loadingTitle').innerText = `${regName} 스마트 통신 쉼터 입지 분석`;
+            document.getElementById('loadingTitle').innerText = `${regName} 스마트 통신 인프라 분석`;
             updateProgress(0, 1, `[${regName}] 분석 준비 중...`);
             document.getElementById('loading-overlay').classList.add('active');
         }
@@ -3331,12 +3979,63 @@
             }
         }
 
+        let isManualRegionSelected = false; // 사용자가 수동으로 타 지역을 선택했는지 여부
         let isRegionSwitching = false;
+        let _suppressMapSyncUntil = 0;
+        let _mapSyncDebounceTimer = null;
+
+        // 지도 중심 이동 시(줌 레벨 >= 11) 또는 [화면 위치로 탐색] 버튼 클릭 시 현재 화면 중심 지역 감지 및 전환
+        async function _performRegionSync(isManualBtn) {
+            if (!map || isRegionSwitching) return;
+            const center = map.getCenter();
+            try {
+                const res = await fetch('/api/detect-region', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ latitude: center.lat, longitude: center.lng })
+                });
+                const d = await res.json();
+                if (d.status === 'success' && d.region_code) {
+                    if (d.region_code !== currentRegionCode) {
+                        isManualRegionSelected = false;
+                        await selectRegion(d.region_code, true, true);
+                        showToast(`🧭 화면 중심 위치에 맞춰 [${d.region_name || d.region_code}] 지역으로 전환되었습니다.`);
+                    } else if (isManualBtn) {
+                        showToast(`📍 현재 화면 중심은 이미 [${d.region_name || d.region_code}] 지역입니다.`);
+                    }
+                }
+            } catch (e) {}
+        }
+
+        function syncRegionToMapCenter(isManualBtn = false) {
+            if (!map || isRegionSwitching) return;
+            if (isManualBtn) {
+                if (_mapSyncDebounceTimer) clearTimeout(_mapSyncDebounceTimer);
+                _performRegionSync(true);
+                return;
+            }
+            if (isRecordingTrack || simIsPlaying) return;
+            if (Date.now() < _suppressMapSyncUntil) return;
+            if (map.getZoom() < 11) return;
+
+            if (_mapSyncDebounceTimer) clearTimeout(_mapSyncDebounceTimer);
+            _mapSyncDebounceTimer = setTimeout(() => {
+                if (!map || isRegionSwitching || Date.now() < _suppressMapSyncUntil || map.getZoom() < 11) return;
+                _performRegionSync(false);
+            }, 600);
+        }
+
         // 사용자가 지역 카드를 클릭했거나 GPS에 의해 자동 감지되었을 때 즉시/진행도 전환 핸들러
-        async function selectRegion(regionCode, skipFlyToCenter = false) {
+        async function selectRegion(regionCode, skipFlyToCenter = false, isAutoDetected = false) {
             if (isRegionSwitching) return;
             isRegionSwitching = true;
             try {
+                if (!isAutoDetected) {
+                    isManualRegionSelected = true;
+                    if (isLiveTracking) {
+                        stopLiveGpsTracking();
+                    }
+                }
                 closeRegionModal();
 
                 // 모달 내 선택 스타일 업데이트
@@ -3439,8 +4138,15 @@
             setProvCnt('cnt-ms-4g', byMsGen['4g']);
             setProvCnt('cnt-ms-3g', byMsGen['3g']);
 
-            // 지도 중심 부드럽게 이동 (GPS 위치 추적 중에는 사용자의 현재 좌표 유지를 위해 스킵)
+            // 3개 문화 축제/행사 출처별 건수 뱃지 갱신
+            const byFestSrc = data.summary.festivals_by_source || {};
+            setProvCnt('cnt-fest-tourapi', byFestSrc.tourapi);
+            setProvCnt('cnt-fest-std', byFestSrc.festival_std);
+            setProvCnt('cnt-fest-culture', byFestSrc.culture_info);
+
+            // 지도 중심 부드럽게 이동 (GPS 위치 추적 또는 지도 드래그 동기화 중에는 스킵)
             if (!skipFlyToCenter) {
+                _suppressMapSyncUntil = Date.now() + 1500;
                 map.flyTo([data.region.lat, data.region.lon], data.region.zoom, { animate: true, duration: 0.8 });
             }
 
@@ -3780,13 +4486,18 @@
                 return { marker, circle: circle100m };
             });
 
-            // 4. 한국관광공사 TourAPI 4.0 축제/행사 마커 1회 생성 캐시
+            // 4. 3개 API 통합 문화 축제/행사 마커 1회 생성 캐시
             _cachedFestivalMarkers = festivalData.map(fest => {
+                const apiSrc = fest.api_source || 'tourapi';
+                const badgeColor = fest.api_source_color || '#9333ea';
+                const badgeText = fest.api_source_badge || 'TourAPI';
+                const srcName = fest.api_source_name || fest.source || '한국관광공사 TourAPI';
+
                 const festIcon = L.divIcon({
                     className: 'custom-fest-pin',
                     html: `
                         <div style="
-                            background: linear-gradient(135deg, #a855f7, #7e22ce);
+                            background: ${badgeColor};
                             color: white;
                             width: 34px;
                             height: 34px;
@@ -3795,7 +4506,7 @@
                             align-items: center;
                             justify-content: center;
                             border: 2.5px solid white;
-                            box-shadow: 0 4px 12px rgba(126, 34, 206, 0.5);
+                            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.35);
                         ">
                             <i class="fa-solid fa-champagne-glasses" style="font-size: 14px;"></i>
                         </div>
@@ -3805,7 +4516,7 @@
                 });
 
                 const festMarker = L.marker([fest.latitude, fest.longitude], { icon: festIcon })
-                    .bindTooltip(`🎉 [문화축제] <b>${fest.title}</b><br><span style="font-size:11px; color:#c084fc;">인파 집결 및 통신 지연 예상 구역</span>`, { direction: 'top' });
+                    .bindTooltip(`🎉 <b style="color:${badgeColor};">[${badgeText}]</b> <b>${fest.title}</b><br><span style="font-size:11px; color:#64748b;">인파 집결 및 통신 지연 예상 구역</span>`, { direction: 'top' });
 
                 festMarker.on('click', () => {
                     openDetailPanel({
@@ -3818,20 +4529,25 @@
                         lon: fest.longitude,
                         image: fest.image,
                         tel: fest.tel,
-                        source: fest.source
+                        content: fest.content || '',
+                        source: fest.source || srcName,
+                        api_source: apiSrc,
+                        api_source_name: srcName,
+                        api_source_badge: badgeText,
+                        api_source_color: badgeColor
                     });
                 });
 
                 const festCircle = L.circle([fest.latitude, fest.longitude], {
                     radius: 500,
-                    color: '#a855f7',
+                    color: badgeColor,
                     dashArray: '4, 4',
-                    fillColor: '#c084fc',
+                    fillColor: badgeColor,
                     fillOpacity: 0.12,
                     weight: 1.5
                 });
 
-                return { marker: festMarker, circle: festCircle };
+                return { marker: festMarker, circle: festCircle, api_source: apiSrc };
             });
 
             // 5. 한국방송통신전파진흥원(KCA) 산악지역 이동통신 기지국 1회 생성 캐시
@@ -3998,12 +4714,19 @@
                 });
             }
 
-            // 4. 한국관광공사 TourAPI 4.0 축제/행사 마커
+            // 4. 3개 API 통합 문화 축제/행사 마커 (출처별 필터 반영)
             const showFestivals = document.getElementById('layer-festivals')?.checked ?? true;
+            const activeFestSrc = {
+                tourapi: document.getElementById('filter-fest-tourapi')?.checked ?? true,
+                festival_std: document.getElementById('filter-fest-std')?.checked ?? true,
+                culture_info: document.getElementById('filter-fest-culture')?.checked ?? true
+            };
             if (showFestivals && _cachedFestivalMarkers.length > 0) {
                 _cachedFestivalMarkers.forEach(item => {
-                    layerFestivalGroup.addLayer(item.marker);
-                    layerFestivalGroup.addLayer(item.circle);
+                    if (activeFestSrc[item.api_source] ?? true) {
+                        layerFestivalGroup.addLayer(item.marker);
+                        layerFestivalGroup.addLayer(item.circle);
+                    }
                 });
             }
 
@@ -4034,6 +4757,440 @@
                     }
                 });
             }
+
+            // 6. KCA 전파누리 전국 도심/거주지 이동통신 기지국 (GeoServer WMS 고속 오버레이)
+            updatePmsWmsLayer();
+        }
+
+        // KCA 전파누리 전국 기지국 WMS 타일 및 WFS 커버리지 원 관리
+        let pmsWmsLayer = null;
+        let _cityWfsAbortController = null;
+
+        function updatePmsWmsLayer() {
+            const showPms = document.getElementById('layer-pms-all')?.checked ?? false;
+
+            // 1. 전세계 기지국 (CellMapper / OpenCelliD) 동적 갱신
+            updateGlobalCellsOverlay();
+
+            // 2. KCA 전파누리 전국 기지국 WMS 타일 레이어
+            if (!showPms) {
+                if (pmsWmsLayer && map && map.hasLayer(pmsWmsLayer)) {
+                    map.removeLayer(pmsWmsLayer);
+                }
+                layerCityCoverageGroup.clearLayers();
+                layerCityStationGroup.clearLayers();
+                return;
+            }
+
+            const g5 = document.getElementById('filter-pms-5g')?.checked ?? true;
+            const g4 = document.getElementById('filter-pms-4g')?.checked ?? true;
+            const g3 = document.getElementById('filter-pms-3g')?.checked ?? true;
+
+            const pSkt = document.getElementById('filter-pms-skt')?.checked ?? true;
+            const pKt = document.getElementById('filter-pms-kt')?.checked ?? true;
+            const pLgu = document.getElementById('filter-pms-lgu')?.checked ?? true;
+
+            const provCount = (pSkt ? 1 : 0) + (pKt ? 1 : 0) + (pLgu ? 1 : 0);
+            const genCount = (g5 ? 1 : 0) + (g4 ? 1 : 0) + (g3 ? 1 : 0);
+
+            if (provCount === 0 || genCount === 0) {
+                if (pmsWmsLayer && map && map.hasLayer(pmsWmsLayer)) {
+                    map.removeLayer(pmsWmsLayer);
+                }
+                layerCityCoverageGroup.clearLayers();
+                layerCityStationGroup.clearLayers();
+                return;
+            }
+
+            let layers = [];
+            if (provCount < 3) {
+                if (pSkt) layers.push('KCA:PMS_SK');
+                if (pKt) layers.push('KCA:PMS_KT');
+                if (pLgu) layers.push('KCA:PMS_LG');
+            } else {
+                if (g5) layers.push('KCA:PMS_5G');
+                if (g4) layers.push('KCA:PMS_4G');
+                if (g3) layers.push('KCA:PMS_3G');
+            }
+
+            if (layers.length === 0) {
+                if (pmsWmsLayer && map && map.hasLayer(pmsWmsLayer)) {
+                    map.removeLayer(pmsWmsLayer);
+                }
+                layerCityCoverageGroup.clearLayers();
+                layerCityStationGroup.clearLayers();
+                return;
+            }
+
+            const layerParam = layers.join(',');
+            if (pmsWmsLayer) {
+                pmsWmsLayer.setParams({ layers: layerParam });
+                if (map && !map.hasLayer(pmsWmsLayer)) {
+                    map.addLayer(pmsWmsLayer);
+                }
+            } else if (map) {
+                pmsWmsLayer = L.tileLayer.wms('https://spectrummap.kr/geoserver/KCA/wms', {
+                    layers: layerParam,
+                    format: 'image/png',
+                    transparent: true,
+                    version: '1.1.1',
+                    maxZoom: 19,
+                    opacity: 0.85,
+                    zIndex: 350
+                });
+                map.addLayer(pmsWmsLayer);
+            }
+
+            // 3. 도심 기지국 전파 커버리지 원 및 벡터 마커 동적 갱신
+            updateCityStationCoverageCircles();
+        }
+
+        // 전세계 기지국 (OpenCelliD / CellMapper 크라우드소싱) 동적 렌더링 엔진
+        let _globalCellsDebounce = null;
+        let _globalCellsAbortController = null;
+
+        function updateGlobalCellsOverlay() {
+            const showGlobal = document.getElementById('layer-global-cells')?.checked ?? false;
+            if (!showGlobal || !map) {
+                layerGlobalCellsGroup.clearLayers();
+                return;
+            }
+
+            if (_globalCellsDebounce) clearTimeout(_globalCellsDebounce);
+            _globalCellsDebounce = setTimeout(async () => {
+                const isChecked = document.getElementById('layer-global-cells')?.checked ?? false;
+                if (!isChecked || !map) {
+                    layerGlobalCellsGroup.clearLayers();
+                    return;
+                }
+
+                if (_globalCellsAbortController) _globalCellsAbortController.abort();
+                _globalCellsAbortController = new AbortController();
+
+                const bounds = map.getBounds();
+                const sw = bounds.getSouthWest();
+                const ne = bounds.getNorthEast();
+
+                try {
+                    const res = await fetch(`/api/global-cells?bbox=${sw.lng},${sw.lat},${ne.lng},${ne.lat}`, {
+                        signal: _globalCellsAbortController.signal
+                    });
+                    const data = await res.json();
+                    if (!data.has_key) {
+                        showToast('OpenCelliD API 키가 설정되지 않았습니다. .env에 키를 등록하시면 전세계 실측 기지국이 표시됩니다.', 'warning');
+                        return;
+                    }
+
+                    if (!data || !data.cells || data.cells.length === 0) return;
+
+                    data.cells.forEach(cell => {
+                        const color = cell.color || (cell.radio === '5G NR' ? '#8b5cf6' : (cell.radio === 'LTE' ? '#0ea5e9' : '#f59e0b'));
+                        const range = cell.range || 450;
+
+                        // 1. 크라우드소싱 기지국 커버리지 원 (점선 서클)
+                        const circle = L.circle([cell.lat, cell.lon], {
+                            radius: range,
+                            color: color,
+                            weight: 1.5,
+                            dashArray: '3, 4',
+                            fillColor: color,
+                            fillOpacity: 0.12
+                        }).on('click', () => openDetailPanel({
+                            type: 'global_cell',
+                            title: `[${cell.provider_name || '전세계 망'}] ${cell.radio} 기지국`,
+                            cell_id: cell.cell_id,
+                            lac: cell.lac,
+                            mcc: cell.mcc,
+                            mnc: cell.mnc,
+                            provider_name: cell.provider_name,
+                            radio: cell.radio,
+                            range: range,
+                            lat: cell.lat,
+                            lon: cell.lon,
+                            source: cell.source
+                        }));
+                        layerGlobalCellsGroup.addLayer(circle);
+
+                        // 2. 크라우드소싱 기지국 아이콘 마커 (작고 세련된 청록/보라색 펄스 점)
+                        const cellIcon = L.divIcon({
+                            className: 'global-cell-icon',
+                            html: `<div style="
+                                width:13px; height:13px; border-radius:50%;
+                                background:${color}; border:2px solid #ffffff;
+                                box-shadow:0 0 6px ${color}bb; cursor:pointer;
+                                display:flex; align-items:center; justify-content:center;
+                            "></div>`,
+                            iconSize: [13, 13],
+                            iconAnchor: [6.5, 6.5]
+                        });
+
+                        const marker = L.marker([cell.lat, cell.lon], { icon: cellIcon, zIndexOffset: 320 })
+                            .on('click', () => openDetailPanel({
+                                type: 'global_cell',
+                                title: `[${cell.provider_name || '전세계 망'}] ${cell.radio} 기지국`,
+                                cell_id: cell.cell_id,
+                                lac: cell.lac,
+                                mcc: cell.mcc,
+                                mnc: cell.mnc,
+                                provider_name: cell.provider_name,
+                                radio: cell.radio,
+                                range: range,
+                                lat: cell.lat,
+                                lon: cell.lon,
+                                source: cell.source
+                            }));
+                        layerGlobalCellsGroup.addLayer(marker);
+                    });
+                } catch (e) {
+                    if (e.name !== 'AbortError') console.warn('Global cells error:', e);
+                }
+            }, 200);
+        }
+
+        // 도심 기지국 과학적 전파 커버리지 원 렌더링 엔진 (ITU-R P.1411 도심 전파 모델 기반)
+        let _cityWfsDebounce = null;
+        function updateCityStationCoverageCircles() {
+            if (_cityWfsDebounce) clearTimeout(_cityWfsDebounce);
+            _cityWfsDebounce = setTimeout(async () => {
+                const showPms = document.getElementById('layer-pms-all')?.checked ?? false;
+                const showCoverage = document.getElementById('layer-pms-coverage')?.checked ?? true;
+
+                if (!showPms || !showCoverage || !map || map.getZoom() < 14) {
+                    layerCityCoverageGroup.clearLayers();
+                    layerCityStationGroup.clearLayers();
+                    return;
+                }
+
+                if (_cityWfsAbortController) {
+                    _cityWfsAbortController.abort();
+                }
+                _cityWfsAbortController = new AbortController();
+
+                const bounds = map.getBounds();
+                const sw = bounds.getSouthWest();
+                const ne = bounds.getNorthEast();
+
+                const g5 = document.getElementById('filter-pms-5g')?.checked ?? true;
+                const g4 = document.getElementById('filter-pms-4g')?.checked ?? true;
+                const g3 = document.getElementById('filter-pms-3g')?.checked ?? true;
+
+                let reqLayers = [];
+                if (g5) reqLayers.push('KCA:PMS_5G');
+                if (g4) reqLayers.push('KCA:PMS_4G');
+                if (g3) reqLayers.push('KCA:PMS_3G');
+                if (reqLayers.length === 0) return;
+
+                const primaryLayer = reqLayers[0]; // 줌 화면 내 기지국 표본 추출
+                // 브라우저 직접 호출(CORS 에러 발생) 대신 백엔드 고속 프록시 경유
+                const wfsUrl = `/api/proxy/kca-wfs?primaryLayer=${encodeURIComponent(primaryLayer)}&bbox=${sw.lng},${sw.lat},${ne.lng},${ne.lat}&maxFeatures=150`;
+
+                try {
+                    const res = await fetch(wfsUrl, { signal: _cityWfsAbortController.signal });
+                    const geo = await res.json();
+                    layerCityCoverageGroup.clearLayers();
+                    layerCityStationGroup.clearLayers();
+
+                    if (!geo || !geo.features) return;
+
+                    geo.features.forEach(feat => {
+                        const coords = feat.geometry?.coordinates;
+                        if (!coords || coords.length < 2) return;
+                        const [lng, lat] = coords;
+                        const props = feat.properties || {};
+                        const pmsNo = props.RDS_PMS_NO || 'PMS';
+                        const cusNo = props.CUS_NO;
+                        const idStr = feat.id || '';
+
+                        // 세대 판별 및 기술적 커버리지 반경 모델링
+                        let gen = '4G';
+                        let genBadge = '4G LTE';
+                        let covRadius = 500; // 도심 LTE 500m
+                        let color = '#0284c7';
+
+                        if (idStr.includes('5G') || primaryLayer.includes('5G')) {
+                            gen = '5G';
+                            genBadge = '5G NR 초광대역';
+                            covRadius = 300; // 3.5GHz Sub-6 도심 셀 반경 300m
+                            color = '#8b5cf6';
+                        } else if (idStr.includes('3G') || primaryLayer.includes('3G')) {
+                            gen = '3G';
+                            genBadge = '3G 광대역';
+                            covRadius = 800; // 저주파 광대역 반경 800m
+                            color = '#f59e0b';
+                        }
+
+                        let provName = '이동통신 기지국';
+                        let provColor = color;
+                        if (cusNo === 195403) { provName = 'SK텔레콤'; provColor = '#EA002C'; }
+                        else if (cusNo === 2151) { provName = 'KT'; provColor = '#00A0E9'; }
+                        else if (cusNo === 39818) { provName = 'LG유플러스'; provColor = '#E6007E'; }
+
+                        // 허가번호에서 설치연도 추출 (체계: 앞 2자리 지역코드 뒤 4자리 YYYY)
+                        let installYear = '';
+                        if (pmsNo.length >= 6) {
+                            const y = pmsNo.substring(2, 6);
+                            if (/^(19|20)\d{2}$/.test(y)) installYear = y;
+                        }
+
+                        const stationInfo = {
+                            type: 'city_station',
+                            title: `[${provName}] 도심 이동통신 기지국`,
+                            pms_no: pmsNo,
+                            provider_name: provName,
+                            provider_color: provColor,
+                            generation: gen,
+                            gen_badge: genBadge,
+                            gen_color: color,
+                            coverage_radius: covRadius,
+                            year: installYear,
+                            svc_code: props.SVC_FORM_C || '18 (기지국)',
+                            lat: lat,
+                            lon: lng
+                        };
+
+                        // 1. 도심 기지국 전파 커버리지 원 (반투명 서클)
+                        const circle = L.circle([lat, lng], {
+                            radius: covRadius,
+                            color: color,
+                            weight: 1.5,
+                            fillColor: color,
+                            fillOpacity: 0.12,
+                            dashArray: '3, 4'
+                        }).on('click', () => openDetailPanel(stationInfo));
+                        layerCityCoverageGroup.addLayer(circle);
+
+                        // 2. 도심 기지국 아이콘 마커 (작고 세련된 펄스 점)
+                        const stationIcon = L.divIcon({
+                            className: 'city-station-icon',
+                            html: `<div style="
+                                width:12px; height:12px; border-radius:50%;
+                                background:${color}; border:2px solid #ffffff;
+                                box-shadow:0 0 6px ${color};
+                            "></div>`,
+                            iconSize: [12, 12],
+                            iconAnchor: [6, 6]
+                        });
+                        const marker = L.marker([lat, lng], { icon: stationIcon, zIndexOffset: 200 })
+                            .on('click', () => openDetailPanel(stationInfo));
+                        layerCityStationGroup.addLayer(marker);
+                    });
+                } catch (e) {
+                    if (e.name !== 'AbortError') console.warn('WFS coverage fetch error:', e);
+                }
+            }, 300);
+        }
+
+        // 전파누리 기지국 클릭 시 상세정보(GetFeatureInfo) 팝업 및 패널 연동 핸들러
+        let _pmsClickHandlerBound = false;
+        function setupPmsMapClickHandler() {
+            if (!map || _pmsClickHandlerBound) return;
+            _pmsClickHandlerBound = true;
+
+            map.on('click', function(e) {
+                const showPms = document.getElementById('layer-pms-all')?.checked;
+                if (!showPms || !pmsWmsLayer || !map.hasLayer(pmsWmsLayer)) return;
+
+                if (map.getZoom() < 13) {
+                    showToast('📡 기지국 상세정보 확인을 위해 지도를 조금 더 확대해주세요.');
+                    return;
+                }
+
+                const point = map.latLngToContainerPoint(e.latlng, map.getZoom());
+                const size = map.getSize();
+                const bounds = map.getBounds();
+                const sw = bounds.getSouthWest();
+                const ne = bounds.getNorthEast();
+                const activeLayers = pmsWmsLayer.wmsParams.layers;
+
+                const url = `https://spectrummap.kr/geoserver/KCA/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo` +
+                    `&LAYERS=${encodeURIComponent(activeLayers)}` +
+                    `&QUERY_LAYERS=${encodeURIComponent(activeLayers)}` +
+                    `&INFO_FORMAT=application/json` +
+                    `&BBOX=${sw.lng},${sw.lat},${ne.lng},${ne.lat}` +
+                    `&WIDTH=${Math.round(size.x)}&HEIGHT=${Math.round(size.y)}` +
+                    `&X=${Math.round(point.x)}&Y=${Math.round(point.y)}` +
+                    `&SRS=EPSG:4326`;
+
+                fetch(url)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data && data.features && data.features.length > 0) {
+                            const feat = data.features[0];
+                            const props = feat.properties || {};
+                            const pmsNo = props.RDS_PMS_NO || '조회 불가';
+                            const cusNo = props.CUS_NO;
+                            let provName = '이동통신 기지국';
+                            let provBadgeColor = '#2563eb';
+                            if (cusNo === 195403) { provName = 'SK텔레콤'; provBadgeColor = '#EA002C'; }
+                            else if (cusNo === 2151) { provName = 'KT'; provBadgeColor = '#00A0E9'; }
+                            else if (cusNo === 39818) { provName = 'LG유플러스'; provBadgeColor = '#E6007E'; }
+
+                            let gen = '4G';
+                            let genBadge = '4G LTE';
+                            let covRadius = 500;
+                            let color = '#0284c7';
+                            const idStr = feat.id || '';
+                            if (idStr.includes('5G') || activeLayers.includes('5G')) {
+                                gen = '5G'; genBadge = '5G NR 초광대역'; covRadius = 300; color = '#8b5cf6';
+                            } else if (idStr.includes('3G') || activeLayers.includes('3G')) {
+                                gen = '3G'; genBadge = '3G 광대역'; covRadius = 800; color = '#f59e0b';
+                            }
+
+                            const [lng, lat] = feat.geometry?.coordinates || [e.latlng.lng, e.latlng.lat];
+                            let installYear = '';
+                            if (pmsNo.length >= 6) {
+                                const y = pmsNo.substring(2, 6);
+                                if (/^(19|20)\d{2}$/.test(y)) installYear = y;
+                            }
+
+                            const stationInfo = {
+                                type: 'city_station',
+                                title: `[${provName}] 도심 이동통신 기지국`,
+                                pms_no: pmsNo,
+                                provider_name: provName,
+                                provider_color: provBadgeColor,
+                                generation: gen,
+                                gen_badge: genBadge,
+                                gen_color: color,
+                                coverage_radius: covRadius,
+                                year: installYear,
+                                svc_code: props.SVC_FORM_C || '18 (기지국)',
+                                lat: lat,
+                                lon: lng
+                            };
+
+                            const popupHtml = `
+                                <div style="font-family:'Pretendard', sans-serif; min-width:230px; padding:4px;">
+                                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+                                        <span style="font-size:11px; font-weight:800; color:white; background:${provBadgeColor}; padding:2px 8px; border-radius:12px;">${provName}</span>
+                                        <span style="font-size:10px; color:#64748b; font-weight:700;">전파누리 실시간망</span>
+                                    </div>
+                                    <div style="font-size:13.5px; font-weight:800; color:#0f172a; margin-bottom:6px;">
+                                        📡 ${genBadge} 무선국
+                                    </div>
+                                    <div style="font-size:12px; color:#475569; line-height:1.7;">
+                                        <div><b>무선국 허가번호:</b> <span style="font-family:monospace; color:#0f172a; font-weight:700;">${pmsNo}</span></div>
+                                        <div><b>전파 커버리지:</b> <span style="color:#2563eb; font-weight:700;">반경 약 ${covRadius}m</span></div>
+                                        <div><b>서비스 형태 코드:</b> ${props.SVC_FORM_C || '-'}</div>
+                                        <div><b>위치 좌표:</b> ${lat.toFixed(5)}, ${lng.toFixed(5)}</div>
+                                    </div>
+                                    <div style="margin-top:10px; display:flex; gap:6px;">
+                                        <button onclick="openDetailPanel(${JSON.stringify(stationInfo).replace(/"/g, '&quot;')})" style="flex:1; padding:6px 0; background:#2563eb; color:white; border:none; border-radius:6px; font-size:11.5px; font-weight:700; cursor:pointer;">
+                                            📋 전체 제원 보기
+                                        </button>
+                                    </div>
+                                </div>
+                            `;
+                            L.popup()
+                                .setLatLng(e.latlng)
+                                .setContent(popupHtml)
+                                .openOn(map);
+                        }
+                    })
+                    .catch(err => {
+                        console.warn('WMS GetFeatureInfo error:', err);
+                    });
+            });
         }
 
         // 상세 정보 사이드 패널 열기
@@ -4085,25 +5242,31 @@
                     </div>
                 `;
             } else if (info.type === 'festival') {
+                const badgeColor = info.api_source_color || '#7e22ce';
+                const badgeName = info.api_source_name || info.source || '한국관광공사 TourAPI';
                 bodyEl.innerHTML = `
-                    <div style="background:linear-gradient(135deg, #7e22ce, #581c87); color:white; padding:14px; border-radius:10px; margin-bottom:14px;">
-                        <span style="background:rgba(255,255,255,0.25); color:white; font-size:11px; font-weight:800; padding:2px 8px; border-radius:10px;">🎉 한국관광공사 TourAPI 4.0 연동</span>
+                    <div style="background:linear-gradient(135deg, ${badgeColor}, #312e81); color:white; padding:14px; border-radius:10px; margin-bottom:14px;">
+                        <span style="background:rgba(255,255,255,0.22); color:white; font-size:11px; font-weight:800; padding:2px 8px; border-radius:10px;">🎉 ${badgeName} 연동</span>
                         <div style="font-size:18px; font-weight:800; margin-top:6px;">${info.title}</div>
-                        <div style="font-size:12.5px; opacity:0.9; margin-top:4px;">기간: ${info.start_date} ~ ${info.end_date}</div>
+                        <div style="font-size:12.5px; opacity:0.9; margin-top:4px;">기간: ${info.start_date || '-'} ~ ${info.end_date || '-'}</div>
                     </div>
                     <div style="background:#fef2f2; border:1.5px solid #fecaca; border-radius:8px; padding:10px 12px; margin-bottom:14px;">
                         <div style="color:#b91c1c; font-weight:800; font-size:13px; margin-bottom:2px;">
                             <i class="fa-solid fa-triangle-exclamation"></i> 대규모 인파 밀집 & 통신 트래픽 주의
                         </div>
                         <div style="font-size:12px; color:#7f1d1d; line-height:1.5;">
-                            본 축제/행사 반경 500m~1km 구역은 일시적 통신 폭증 및 이동통신 지연이 발생할 수 있어, 공공 Wi-Fi 기반 <b>스마트 통신 쉼터</b> 설치 시 유동인구 분산 효과가 매우 큽니다.
+                            본 축제/행사 반경 500m~1km 구역은 일시적 통신 폭증 및 이동통신 지연이 발생할 수 있어, <b>공공 Wi-Fi 및 통신 인프라 확충</b> 시 유동인구 분산 효과가 매우 큽니다.
                         </div>
                     </div>
+                    ${info.content ? `
+                    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 12px; margin-bottom:14px; font-size:12px; color:#334155; line-height:1.5;">
+                        <b>📋 행사 개요:</b><br>${info.content}
+                    </div>` : ''}
                     <div class="detail-section">
                         <div class="detail-row"><span>행사장 소재지</span><b>${info.address || '정보 없음'}</b></div>
                         <div class="detail-row"><span>위도 / 경도</span><b>${info.lat.toFixed(5)}, ${info.lon.toFixed(5)}</b></div>
                         <div class="detail-row"><span>문의 연락처</span><b>${info.tel || '1330 (관광안내콜센터)'}</b></div>
-                        <div class="detail-row"><span>데이터 출처</span><b>${info.source || 'TourAPI 4.0'}</b></div>
+                        <div class="detail-row"><span>데이터 출처</span><b style="color:${badgeColor};">${info.api_source_badge || badgeName}</b></div>
                     </div>
                     <div style="text-align:center; margin-top:14px;">
                         <a href="https://map.kakao.com/link/to/${encodeURIComponent(info.title)},${info.lat},${info.lon}" target="_blank" style="
@@ -4135,9 +5298,54 @@
                         </a>
                     </div>
                 `;
+            } else if (info.type === 'city_station') {
+                const provBg = info.provider_color || '#2563eb';
+                const genBg = info.gen_color || '#0284c7';
+                bodyEl.innerHTML = `
+                    <div style="background:linear-gradient(135deg, ${provBg}, #0f172a); color:white; padding:15px 16px; border-radius:12px; margin-bottom:14px; box-shadow:0 4px 14px rgba(0,0,0,0.15);">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="background:${genBg}; color:white; font-size:11px; font-weight:800; padding:2px 8px; border-radius:10px;">📡 [${info.provider_name}] ${info.generation} 기지국</span>
+                            <span style="font-size:11px; opacity:0.9;">전파누리 GeoServer WFS</span>
+                        </div>
+                        <div style="font-size:17.5px; font-weight:800; margin-top:8px; line-height:1.35; word-break:keep-all;">${info.title}</div>
+                        <div style="font-size:12px; opacity:0.92; margin-top:4px;"><i class="fa-solid fa-signal"></i> 서비스 형태 코드: ${info.svc_code}</div>
+                    </div>
+
+                    <div style="margin-bottom:14px;">
+                        <div style="font-size:12px; font-weight:800; color:#475569; margin-bottom:6px; display:flex; align-items:center; gap:5px;">
+                            <i class="fa-solid fa-tower-broadcast" style="color:${provBg};"></i> <span>도심 무선 전파 및 커버리지 제원</span>
+                        </div>
+                        <div class="detail-section" style="margin-bottom:0;">
+                            <div class="detail-row"><span>통신사업자</span><b style="color:${provBg}; font-weight:800;">${info.provider_name}</b></div>
+                            <div class="detail-row"><span>통신 세대</span><b style="color:${genBg}; font-weight:800;">${info.gen_badge}</b></div>
+                            <div class="detail-row"><span>도심 유효 커버리지</span><b style="color:#2563eb;">반경 약 ${info.coverage_radius} m</b></div>
+                            <div class="detail-row"><span>무선국 허가번호</span><b style="font-family:monospace; font-size:11.5px; color:#0f172a;">${info.pms_no}</b></div>
+                            <div class="detail-row"><span>개설/허가 연도</span><b>${info.year ? info.year + '년 (허가번호 체계 분석)' : '미상'}</b></div>
+                            <div class="detail-row"><span>위치 좌표</span><b>${info.lat.toFixed(5)}, ${info.lon.toFixed(5)}</b></div>
+                            <div class="detail-row"><span>데이터 소스</span><b>한국방송통신전파진흥원(KCA) 공간정보망</b></div>
+                        </div>
+                    </div>
+
+                    <div style="text-align:center; margin-top:14px;">
+                        <a href="https://map.kakao.com/link/to/${encodeURIComponent(info.title)},${info.lat},${info.lon}" target="_blank" style="
+                            display:inline-block; width:100%; padding:10px; background:#fee500; color:#191919; text-decoration:none; border-radius:8px; font-weight:800; text-align:center;">
+                            🟡 카카오맵에서 기지국 위치 보기
+                        </a>
+                    </div>
+                `;
             } else if (info.type === 'mountain_station') {
                 const provBg = info.provider_color || '#0284c7';
                 const genBg = info.gen_color || '#0284c7';
+
+                // 허가번호에서 개설/허가연도 추출 (앞 2자리 관할청 코드 뒤 4자리 YYYY)
+                let installYearText = '공식 API 미제공';
+                if (info.pms_no && info.pms_no.length >= 6) {
+                    const match = info.pms_no.substring(2, 6);
+                    if (/^(19|20)\d{2}$/.test(match)) {
+                        installYearText = `${match}년 (허가번호 공시 기준)`;
+                    }
+                }
+
                 bodyEl.innerHTML = `
                     <div style="background:linear-gradient(135deg, ${provBg}, #0f172a); color:white; padding:15px 16px; border-radius:12px; margin-bottom:14px; box-shadow:0 4px 14px rgba(0,0,0,0.15);">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -4148,20 +5356,23 @@
                         ${info.park_name ? `<div style="font-size:12px; opacity:0.92; margin-top:4px;"><i class="fa-solid fa-tree"></i> 공원구역: ${info.park_name}</div>` : ''}
                     </div>
 
-                    <!-- 1. 기지국 무선 전파 제원 -->
+                    <!-- 1. 기지국 무선 전파 제원 (공식 API 13개 전체 스펙) -->
                     <div style="margin-bottom:14px;">
                         <div style="font-size:12px; font-weight:800; color:#475569; margin-bottom:6px; display:flex; align-items:center; gap:5px;">
-                            <i class="fa-solid fa-tower-broadcast" style="color:${provBg};"></i> <span>무선 전파 및 기지국 제원</span>
+                            <i class="fa-solid fa-tower-broadcast" style="color:${provBg};"></i> <span>무선 전파 및 기지국 제원 (공식 원본 전체)</span>
                         </div>
                         <div class="detail-section" style="margin-bottom:0;">
                             <div class="detail-row"><span>통신사업자</span><b style="color:${provBg}; font-weight:800;">${info.provider_name}</b></div>
                             <div class="detail-row"><span>서비스 세대</span><b style="color:${genBg}; font-weight:800;">${info.gen_badge || info.generation}</b></div>
-                            <div class="detail-row"><span>송신 주파수</span><b>${info.frequency_mhz ? info.frequency_mhz + ' MHz' : '비공개'}</b></div>
-                            <div class="detail-row"><span>송신 전력</span><b>${info.power_w ? info.power_w + ' W' : '30 W'}</b></div>
+                            <div class="detail-row"><span>무선국 허가번호</span><b style="font-family:monospace; font-size:11px; color:#0f172a;">${info.pms_no || '-'}</b></div>
+                            <div class="detail-row"><span>최초 설치/허가연도</span><b style="color:#0284c7;">${installYearText}</b></div>
+                            <div class="detail-row"><span>송신 주파수</span><b>${info.frequency_mhz ? info.frequency_mhz + ' MHz' : '비공개'} (${info.frequency_hz ? Number(info.frequency_hz).toLocaleString() + ' Hz' : '-'})</b></div>
+                            <div class="detail-row"><span>송신 전력 (W)</span><b>${info.power_w ? info.power_w + ' W' : '30 W'}</b></div>
                             <div class="detail-row"><span>예상 커버리지</span><b style="color:#2563eb;">반경 약 ${info.estimated_coverage_radius || 1500} m</b></div>
                             <div class="detail-row"><span>해발고 / 지상고</span><b>${info.altitude_m || 0}m / ${info.ground_height_m || 15}m</b></div>
-                            <div class="detail-row"><span>안테나 이득</span><b>${info.antenna_gain_dbi || 12} dBi</b></div>
-                            <div class="detail-row"><span>무선국 허가번호</span><b style="font-family:monospace; font-size:11px;">${info.pms_no || '-'}</b></div>
+                            <div class="detail-row"><span>안테나 이득 (Gain)</span><b>${info.antenna_gain_dbi || 12} dBi</b></div>
+                            <div class="detail-row"><span>용도 / 서비스명</span><b>${info.service_name || '이동통신 기지국'}</b></div>
+                            <div class="detail-row"><span>장치 수 (EQM_CNT)</span><b>${info.eqm_cnt || '1대 (기본 매크로셀)'}</b></div>
                         </div>
                     </div>
 
@@ -4180,8 +5391,8 @@
                                 <b>${info.closest_wifi_dist ? `최단 약 ${Number(info.closest_wifi_dist).toFixed(0)}m` : '원거리'}</b>
                             </div>
                             <div style="margin-top:8px; padding:8px 10px; background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; font-size:11.5px; color:#1d4ed8; line-height:1.45;">
-                                <i class="fa-solid fa-circle-info"></i> <b>스마트 쉼터 구축 활용도:</b><br>
-                                본 산악 기지국의 광대역 무선 백홀망을 활용할 경우, 인접 음영 정류장에 <b>초고속 스마트 쉼터(Wi-Fi & 비상 통신망)</b>를 저비용으로 신속 가설할 수 있습니다.
+                                <i class="fa-solid fa-circle-info"></i> <b>통신 인프라 연계 시너지:</b><br>
+                                본 산악 기지국의 광대역 무선 백홀망을 활용할 경우, 인접 음영 정류장에 <b>초고속 공공 Wi-Fi 및 비상 통신망</b>을 저비용으로 신속 가설할 수 있습니다.
                             </div>
                         </div>
                     </div>
@@ -4335,6 +5546,52 @@
                         </button>
                     </div>
                 `;
+            } else if (info.type === 'global_cell') {
+                const radioBg = info.radio === '5G NR' ? '#8b5cf6' : (info.radio === 'LTE' ? '#0ea5e9' : '#f59e0b');
+                const cellMapperUrl = `https://www.cellmapper.net/map?MCC=${info.mcc || 450}&MNC=${info.mnc || 5}&type=${encodeURIComponent(info.radio || 'LTE')}&latitude=${info.lat}&longitude=${info.lon}&zoom=15`;
+                const openCellIdUrl = `https://www.opencellid.org/#zoom=15&lat=${info.lat}&lon=${info.lon}`;
+
+                bodyEl.innerHTML = `
+                    <div style="background:linear-gradient(135deg, #0284c7, #0f172a); color:white; padding:15px 16px; border-radius:12px; margin-bottom:14px; box-shadow:0 4px 14px rgba(0,0,0,0.15);">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="background:${radioBg}; color:white; font-size:11px; font-weight:800; padding:2px 8px; border-radius:10px;">🗼 [${info.provider_name || '전세계 망'}] ${info.radio || '기지국'}</span>
+                            <span style="font-size:11px; opacity:0.9;">OpenCelliD & CellMapper</span>
+                        </div>
+                        <div style="font-size:17.5px; font-weight:800; margin-top:8px; line-height:1.35; word-break:keep-all;">${info.title}</div>
+                        <div style="font-size:12px; opacity:0.92; margin-top:4px;"><i class="fa-solid fa-satellite-dish"></i> Cell ID: ${info.cell_id} (TAC/LAC: ${info.lac || '-'})</div>
+                    </div>
+
+                    <div style="margin-bottom:14px;">
+                        <div style="font-size:12px; font-weight:800; color:#475569; margin-bottom:6px; display:flex; align-items:center; gap:5px;">
+                            <i class="fa-solid fa-tower-cell" style="color:#0284c7;"></i> <span>크라우드소싱 기지국 전파 제원</span>
+                        </div>
+                        <div class="detail-section" style="margin-bottom:0;">
+                            <div class="detail-row"><span>통신사업자</span><b style="color:#0284c7; font-weight:800;">${info.provider_name || '국내외 이동통신사'}</b></div>
+                            <div class="detail-row"><span>무선 통신 규격</span><b style="color:${radioBg}; font-weight:800;">${info.radio}</b></div>
+                            <div class="detail-row"><span>국가/망 코드</span><b>MCC ${info.mcc} / MNC ${info.mnc}</b></div>
+                            <div class="detail-row"><span>Cell ID (셀 식별자)</span><b style="font-family:monospace; font-size:12px;">${info.cell_id}</b></div>
+                            <div class="detail-row"><span>지역 코드 (LAC/TAC)</span><b style="font-family:monospace; font-size:12px;">${info.lac || '-'}</b></div>
+                            <div class="detail-row"><span>추정 전파 반경</span><b style="color:#2563eb;">반경 약 ${info.range || 500} m</b></div>
+                            <div class="detail-row"><span>기지국 좌표</span><b>${info.lat.toFixed(5)}, ${info.lon.toFixed(5)}</b></div>
+                            <div class="detail-row"><span>데이터 소스</span><b>${info.source || 'OpenCelliD / CellMapper Community DB'}</b></div>
+                        </div>
+                    </div>
+
+                    <div style="display:flex; flex-direction:column; gap:8px; margin-top:14px;">
+                        <a href="${cellMapperUrl}" target="_blank" style="
+                            display:flex; align-items:center; justify-content:center; gap:6px; width:100%; padding:11px; background:#0284c7; color:white; text-decoration:none; border-radius:10px; font-weight:800; text-align:center;">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i> <span>CellMapper 공식 사이트에서 이 기지국 열기</span>
+                        </a>
+                        <a href="${openCellIdUrl}" target="_blank" style="
+                            display:flex; align-items:center; justify-content:center; gap:6px; width:100%; padding:10px; background:#f1f5f9; border:1px solid #cbd5e1; color:#0f172a; text-decoration:none; border-radius:10px; font-weight:800; text-align:center;">
+                            <i class="fa-solid fa-globe"></i> <span>OpenCelliD 전세계 지도에서 확인</span>
+                        </a>
+                        <a href="https://map.kakao.com/link/to/${encodeURIComponent(info.title)},${info.lat},${info.lon}" target="_blank" style="
+                            display:flex; align-items:center; justify-content:center; gap:6px; width:100%; padding:10px; background:#fee500; color:#191919; text-decoration:none; border-radius:10px; font-weight:800; text-align:center;">
+                            🟡 <span>카카오맵에서 기지국 위치 보기</span>
+                        </a>
+                    </div>
+                `;
             }
 
             panel.classList.add('open');
@@ -4393,10 +5650,13 @@
                 'filter-prov-kt', 'filter-prov-skt', 'filter-prov-lgu', 'filter-prov-public', 'filter-prov-other',
                 'layer-top10', 'layer-wifi', 'layer-stops',
                 'filter-stop-shadow', 'filter-stop-served', 'filter-stop-dense',
-                'layer-festivals',
+                'layer-festivals', 'filter-fest-tourapi', 'filter-fest-std', 'filter-fest-culture',
                 'layer-mountain', 'layer-mountain-coverage',
                 'filter-ms-skt', 'filter-ms-kt', 'filter-ms-lgu',
-                'filter-ms-5g', 'filter-ms-4g', 'filter-ms-3g'
+                'filter-ms-5g', 'filter-ms-4g', 'filter-ms-3g',
+                'layer-pms-all', 'layer-pms-coverage', 'layer-global-cells',
+                'filter-pms-5g', 'filter-pms-4g', 'filter-pms-3g',
+                'filter-pms-skt', 'filter-pms-kt', 'filter-pms-lgu'
             ];
             filterIds.forEach(id => {
                 const desktopEl = document.getElementById(id);
@@ -4412,9 +5672,13 @@
             const filterIds = [
                 'filter-prov-kt', 'filter-prov-skt', 'filter-prov-lgu', 'filter-prov-public', 'filter-prov-other',
                 'filter-stop-shadow', 'filter-stop-served', 'layer-top10', 'layer-wifi', 'layer-stops', 'layer-festivals',
+                'filter-fest-tourapi', 'filter-fest-std', 'filter-fest-culture',
                 'layer-mountain', 'layer-mountain-coverage',
                 'filter-ms-skt', 'filter-ms-kt', 'filter-ms-lgu',
-                'filter-ms-5g', 'filter-ms-4g', 'filter-ms-3g'
+                'filter-ms-5g', 'filter-ms-4g', 'filter-ms-3g',
+                'layer-pms-coverage',
+                'filter-pms-5g', 'filter-pms-4g', 'filter-pms-3g',
+                'filter-pms-skt', 'filter-pms-kt', 'filter-pms-lgu'
             ];
             filterIds.forEach(id => {
                 const el = document.getElementById(id);
@@ -4433,7 +5697,8 @@
         function deselectAllFilters() {
             const filterIds = [
                 'filter-prov-kt', 'filter-prov-skt', 'filter-prov-lgu', 'filter-prov-public', 'filter-prov-other',
-                'filter-ms-skt', 'filter-ms-kt', 'filter-ms-lgu'
+                'filter-ms-skt', 'filter-ms-kt', 'filter-ms-lgu',
+                'filter-pms-skt', 'filter-pms-kt', 'filter-pms-lgu'
             ];
             filterIds.forEach(id => {
                 const el = document.getElementById(id);
@@ -4591,32 +5856,32 @@
 
             navigator.geolocation.getCurrentPosition(
                 async (pos) => {
-                    if (btnNav) btnNav.classList.remove('loading');
-                    if (btnFab) btnFab.classList.remove('active');
-                    if (btnMob) btnMob.classList.remove('active');
+                    if (btnNav) { btnNav.classList.remove('loading'); btnNav.blur(); }
+                    if (btnFab) { btnFab.classList.remove('active'); btnFab.blur(); }
+                    if (btnMob) { btnMob.classList.remove('active'); btnMob.blur(); }
 
                     const lat = pos.coords.latitude;
                     const lon = pos.coords.longitude;
                     const accuracy = pos.coords.accuracy || 15;
 
-                    // 1. 내 위치로 즉시 부드럽게 줌인 확대 (레벨 17 고해상도)
+                    // 사용자가 직접 '내 위치' 버튼을 1회 눌렀으므로 수동 타지역 고정 해제
+                    isManualRegionSelected = false;
+
+                    // 1. 내 위치로 즉시 부드럽게 줌인 확대 (오직 이 버튼을 직접 눌렀을 때만 1회성 이동)
                     map.flyTo([lat, lon], 17, { animate: true, duration: 1.2 });
 
                     // 2. 마커 및 정확도 원 업데이트
                     updateUserLocationMarker(lat, lon, accuracy, "📍 현재 내 위치");
 
-                    // 3. 서버에 주변 Wi-Fi 거리 계산 및 실제 위치 지역 자동 판별/전환
-                    const checkResult = await evaluateLocationAndNotify(lat, lon);
-                    if (checkResult && checkResult.region_changed) {
-                        map.panTo([lat, lon], { animate: true, duration: 0.5 });
-                    }
+                    // 3. 서버에 주변 Wi-Fi 거리 계산 및 실제 위치 지역 자동 판별/전환 (allowRegionSwitch = true)
+                    await evaluateLocationAndNotify(lat, lon, true);
 
-                    showToast("🎯 현재 위치로 지도가 확대되었습니다!");
+                    showToast("🎯 현재 위치로 지도가 이동되었습니다!");
                 },
                 (err) => {
-                    if (btnNav) btnNav.classList.remove('loading');
-                    if (btnFab) btnFab.classList.remove('active');
-                    if (btnMob) btnMob.classList.remove('active');
+                    if (btnNav) { btnNav.classList.remove('loading'); btnNav.blur(); }
+                    if (btnFab) { btnFab.classList.remove('active'); btnFab.blur(); }
+                    if (btnMob) { btnMob.classList.remove('active'); btnMob.blur(); }
                     console.warn("GPS 단발 조회 오류:", err);
                     alert("위치 정보를 가져올 수 없습니다. GPS 설정 및 브라우저 위치 권한을 확인해주세요. (" + err.message + ")");
                 },
@@ -4669,6 +5934,36 @@
             }
         }
 
+        // ==============================================================================
+        // 백그라운드 최우선권 유지 엔진 (안드로이드 화면 꺼짐 실시간 연속 추적 보장)
+        // 1. Screen Wake Lock API (화면 켜짐 유지)
+        // ==============================================================================
+        // 백그라운드 추적 유지: Screen Wake Lock API (화면 꺼짐/슬립 방지)
+        // (사용자 요청에 따라 음원 재생 방식은 완전히 제거하고 표준 Wake Lock 유지)
+        // ==============================================================================
+        let _screenWakeLock = null;
+
+        async function enableBackgroundPriority() {
+            try {
+                if ('wakeLock' in navigator && !_screenWakeLock) {
+                    _screenWakeLock = await navigator.wakeLock.request('screen');
+                    _screenWakeLock.addEventListener('release', () => { _screenWakeLock = null; });
+                    console.log('[Wake Lock] GPS 추적 중 화면 슬립 방지 활성화');
+                }
+            } catch (e) {
+                console.warn('Wake Lock request error:', e);
+            }
+        }
+
+        function disableBackgroundPriority() {
+            if (!isLiveTracking && !isRecordingTrack) {
+                if (_screenWakeLock) {
+                    try { _screenWakeLock.release(); } catch (e) {}
+                    _screenWakeLock = null;
+                }
+            }
+        }
+
         async function startLiveGpsTracking() {
             if (!navigator.geolocation) {
                 alert("현재 기기나 브라우저에서 GPS 위치 정보를 지원하지 않습니다.");
@@ -4682,6 +5977,10 @@
                 } catch (e) {}
             }
 
+            // 2. 백그라운드 최우선권(화면 꺼짐 추적 유지) 활성화
+            await enableBackgroundPriority();
+
+            isManualRegionSelected = false; // 실시간 추적 시작 시 현재 위치 팔로우
             isLiveTracking = true;
             updateLiveGpsUi(true);
 
@@ -4689,16 +5988,16 @@
             banner.style.display = 'flex';
             banner.className = 'good';
             document.getElementById('banner-icon').className = 'fa-solid fa-satellite-dish fa-spin';
-            document.getElementById('banner-text').innerText = "📡 [실시간 GPS 추적 활성화] 이동에 맞춰 지도가 따라가며 Wi-Fi 음영 진입 시 자동 알림을 전송합니다...";
+            document.getElementById('banner-text').innerText = "📡 [실시간 GPS 추적 활성화] 화면을 꺼도 백그라운드에서 끊김 없이 실시간 추적을 유지합니다.";
 
-            showToast("📡 실시간 GPS 추적 시작! 이동 시 지도가 실시간으로 따라갑니다.");
+            showToast("📡 실시간 GPS 추적 시작! (화면을 꺼도 백그라운드 추적이 지속됩니다)");
 
             watchGpsId = navigator.geolocation.watchPosition(
                 handleLiveGpsSuccess,
                 handleLiveGpsError,
                 {
                     enableHighAccuracy: true,
-                    maximumAge: 3000,
+                    maximumAge: 2000,
                     timeout: 10000
                 }
             );
@@ -4711,6 +6010,7 @@
             }
             isLiveTracking = false;
             updateLiveGpsUi(false);
+            disableBackgroundPriority();
 
             const banner = document.getElementById('gps-banner');
             document.getElementById('banner-icon').className = 'fa-solid fa-circle-check';
@@ -4746,26 +6046,35 @@
             }
         }
 
+        let _lastGpsAccuracy = 15;
+        let _lastGpsLat = null;
+        let _lastGpsLon = null;
+
         async function handleLiveGpsSuccess(pos) {
             const lat = pos.coords.latitude;
             const lon = pos.coords.longitude;
-            const accuracy = pos.coords.accuracy || 10;
+            const accuracy = pos.coords.accuracy || 15;
+            _lastGpsAccuracy = accuracy;
+            _lastGpsLat = lat;
+            _lastGpsLon = lon;
 
-            // 1. 마커 업데이트
-            updateUserLocationMarker(lat, lon, accuracy, "📍 실시간 내 위치 (추적 중)");
+            // 1. 마커 및 GPS 정확도 서클 업데이트
+            updateUserLocationMarker(lat, lon, accuracy, "📍 실시간 내 위치 (백그라운드 추적 중)");
 
-            // 2. 실시간 지도 확대 및 따라가기 (Follow User)
-            if (map.getZoom() < 16) {
-                map.flyTo([lat, lon], 17, { animate: true, duration: 0.8 });
-            } else {
-                map.panTo([lat, lon], { animate: true, duration: 0.5 });
+            // 2. 실시간 지도 확대 및 따라가기 (사용자가 수동으로 타 지역을 선택하지 않은 경우에만)
+            if (!isManualRegionSelected) {
+                if (map.getZoom() < 16) {
+                    map.flyTo([lat, lon], 17, { animate: true, duration: 0.8 });
+                } else {
+                    map.panTo([lat, lon], { animate: true, duration: 0.5 });
+                }
             }
 
             // 3. 서버에 주변 Wi-Fi 거리 계산 요청 및 음영 판정
-            await evaluateLocationAndNotify(lat, lon);
+            await evaluateLocationAndNotify(lat, lon, !isManualRegionSelected, accuracy);
         }
 
-        async function evaluateLocationAndNotify(lat, lon) {
+        async function evaluateLocationAndNotify(lat, lon, allowRegionSwitch = false, accuracy = 15) {
             try {
                 const res = await fetch('/api/check-location', {
                     method: 'POST',
@@ -4779,23 +6088,26 @@
                 const data = await res.json();
 
                 if (data.status === 'success') {
-                    // 사용자의 실제 위치와 현재 설정된 지역이 다를 경우 자동으로 해당 지역 데이터셋으로 전환
-                    if (data.region_changed && data.detected_region && data.detected_region !== currentRegionCode) {
+                    if (allowRegionSwitch && data.region_changed && data.detected_region && data.detected_region !== currentRegionCode) {
                         const newRegName = data.detected_region_name || (regionsMeta[data.detected_region]?.name || data.detected_region);
                         showToast(`🧭 [지역 자동 변경] 실제 위치에 맞춰 [${newRegName}] 지역으로 자동 전환되었습니다.`);
-                        await selectRegion(data.detected_region, true);
+                        await selectRegion(data.detected_region, true, true);
                     }
 
                     const banner = document.getElementById('gps-banner');
                     const icon = document.getElementById('banner-icon');
                     const text = document.getElementById('banner-text');
 
-                    // 개인 이동경로 기록이 활성화되어 있다면 브라우저 LocalStorage에 안전 저장
-                    if (isRecordingTrack) {
-                        recordUserTrackPoint(lat, lon, data.is_shadow, data.closest_dist, data.closest_wifi_name);
+                    // 개인 이동경로 기록이 활성화되어 있고 일시정지 상태가 아니라면 정확도 원 범위와 함께 로컬스토리지에 저장
+                    if (isRecordingTrack && !isRecordingPaused) {
+                        recordUserTrackPoint(lat, lon, accuracy, data.is_shadow, data.closest_dist, data.closest_wifi_name);
                     }
 
-                    if (data.is_shadow) {
+                    if (isRecordingPaused) {
+                        if (banner) banner.className = 'paused';
+                        if (icon) icon.className = 'fa-solid fa-circle-pause';
+                        if (text) text.innerText = `⏸️ [이동경로 일시정지 중] 위치 저장이 일시 중단되었습니다. (패널에서 '계속하기' 클릭 시 재개)`;
+                    } else if (data.is_shadow) {
                         if (banner) banner.className = 'shadow-warn';
                         if (icon) icon.className = 'fa-solid fa-triangle-exclamation';
                         if (text) text.innerText = `⚠️ [음영 사각지대] 인근 Wi-Fi: '${data.closest_wifi_name}' (${data.closest_dist}m 이격)`;
@@ -4847,23 +6159,48 @@
         }
 
         // ==============================================================================
-        // 3. 사용자 프라이빗 이동경로 추적 & 브라우저 LocalStorage 보관 엔진
-        // (100% 온디바이스 저장 / 외부 서버 전송 일체 없음 / 유실 방지)
+        // 3. 사용자 프라이빗 이동경로 추적 & 세션 보관 & 미리주행(모의 내비 시뮬레이터)
+        // (100% 온디바이스 LocalStorage 보관 / 외부 서버 전송 일체 없음 / 유실 방지)
         // ==============================================================================
-        const TRACK_STORAGE_KEY = 'smart_shelter_user_track';
+        const SESSIONS_STORAGE_KEY = 'smart_shelter_user_track_sessions';
+        const ACTIVE_SESSION_KEY = 'smart_shelter_active_track_session';
         const TRACK_CONSENT_KEY = 'smart_shelter_track_consent';
+
         let isRecordingTrack = localStorage.getItem('smart_shelter_is_recording') === 'true';
-        let isTrackVisible = true;
-        // userTrackLayerGroup은 initMap 시점에 지도 레이어로 안전하게 연결됨
+        let isRecordingPaused = localStorage.getItem('smart_shelter_is_paused') === 'true';
+        let currentActiveTrack = null;
+        let loadedTrackSession = null;
+        let openedDateAccordions = {};
+
+        // 미리주행 (Simulation) 엔진 전역 상태
+        let simSession = null;
+        let simProgress = 0; // 0.0 ~ 1.0
+        let simSpeed = 1;    // 배속: 1, 2, 4, 8, 10, 20, 50, 100
+        let simIsPlaying = false;
+        let simCarMarker = null;
+        let simAccuracyCircle = null;
+        let simAnimTimer = null;
+        let simCumDistances = [];
+        let simTotalDistance = 0;
+        let simTotalDurationMs = 10000;
 
         function toggleTrackPanel() {
             const panel = document.getElementById('track-panel');
             if (!panel) return;
             const isVisible = panel.style.display === 'flex';
-            panel.style.display = isVisible ? 'none' : 'flex';
-            if (!isVisible) {
-                updateTrackStatsUi();
-                renderUserTrackOnMap();
+            if (isVisible) {
+                panel.style.display = 'none';
+                // 기록 중이 아닐 때 패널을 닫으면 지도에 불러온 과거 경로와 시뮬레이션 HUD를 자동 정리
+                if (!isRecordingTrack && loadedTrackSession) {
+                    stopTrackSimulation(true);
+                    clearLoadedTrackFromMap(true);
+                }
+            } else {
+                panel.style.display = 'flex';
+                const btnClear = document.getElementById('btn-clear-loaded-track');
+                if (btnClear) {
+                    btnClear.style.display = loadedTrackSession ? 'flex' : 'none';
+                }
             }
         }
 
@@ -4891,13 +6228,98 @@
             }
         }
 
-        function startTrackRecording() {
-            isRecordingTrack = true;
-            localStorage.setItem('smart_shelter_is_recording', 'true');
-            updateTrackButtonsUi();
-            showToast("🚶 이동경로 기록이 시작되었습니다. 기기 내부(LocalStorage)에 안전하게 저장됩니다.");
+        // 실시간 추적 일시정지 / 재개 토글 함수
+        function toggleTrackPause() {
+            if (!isRecordingTrack || !currentActiveTrack) return;
 
-            // 실시간 GPS가 꺼져 있다면 함께 시작
+            isRecordingPaused = !isRecordingPaused;
+            localStorage.setItem('smart_shelter_is_paused', isRecordingPaused ? 'true' : 'false');
+            const now = Date.now();
+            const lat = _lastGpsLat || (userLocationMarker ? userLocationMarker.getLatLng().lat : 0);
+            const lon = _lastGpsLon || (userLocationMarker ? userLocationMarker.getLatLng().lng : 0);
+
+            if (!currentActiveTrack.pauses) {
+                currentActiveTrack.pauses = [];
+            }
+
+            const btnPause = document.getElementById('btn-pause-recording');
+            const txtPause = document.getElementById('txt-pause-recording');
+            const iconPause = document.getElementById('icon-pause-rec');
+
+            if (isRecordingPaused) {
+                // 일시정지 시작: 일시정지 시작시각 및 위치 기록
+                currentActiveTrack.pauses.push({
+                    pauseTime: now,
+                    pauseLat: lat,
+                    pauseLon: lon,
+                    resumeTime: null,
+                    resumeLat: null,
+                    resumeLon: null
+                });
+                if (btnPause) {
+                    btnPause.style.background = '#dbeafe';
+                    btnPause.style.color = '#1d4ed8';
+                    btnPause.style.borderColor = '#93c5fd';
+                }
+                if (txtPause) txtPause.innerText = '계속하기';
+                if (iconPause) iconPause.className = 'fa-solid fa-play';
+
+                showToast("⏸️ 이동경로 기록이 일시정지되었습니다. (휴식/정차 중 위치가 기록되지 않습니다)");
+            } else {
+                // 일시정지 해제: 재개 시각 및 위치 기록
+                if (currentActiveTrack.pauses.length > 0) {
+                    const lastPause = currentActiveTrack.pauses[currentActiveTrack.pauses.length - 1];
+                    lastPause.resumeTime = now;
+                    lastPause.resumeLat = lat;
+                    lastPause.resumeLon = lon;
+                }
+                if (btnPause) {
+                    btnPause.style.background = '#fef3c7';
+                    btnPause.style.color = '#b45309';
+                    btnPause.style.borderColor = '#fde68a';
+                }
+                if (txtPause) txtPause.innerText = '일시정지';
+                if (iconPause) iconPause.className = 'fa-solid fa-pause';
+
+                showToast("▶️ 이동경로 기록을 재개합니다!");
+            }
+
+            try {
+                localStorage.setItem(ACTIVE_SESSION_KEY, JSON.stringify(currentActiveTrack));
+            } catch (e) {}
+
+            renderActiveRecordingTrack(currentActiveTrack.points);
+        }
+
+        async function startTrackRecording() {
+            stopTrackSimulation(true);
+            clearLoadedTrackFromMap(true);
+
+            isRecordingTrack = true;
+            isRecordingPaused = false;
+            localStorage.setItem('smart_shelter_is_recording', 'true');
+            localStorage.setItem('smart_shelter_is_paused', 'false');
+
+            // 신규 활성 세션 생성 (일시정지 목록 pauses 포함)
+            currentActiveTrack = {
+                id: 'track_' + Date.now(),
+                startTime: Date.now(),
+                points: [],
+                pauses: []
+            };
+            try {
+                localStorage.setItem(ACTIVE_SESSION_KEY, JSON.stringify(currentActiveTrack));
+            } catch (e) {}
+
+            userTrackLayerGroup.clearLayers();
+            updateTrackButtonsUi();
+            updateActiveTrackStatsUi(0, 0, 0);
+
+            // 백그라운드 우선권(무음 오디오 루프) 활성화 -> 화면 꺼짐 상태에서도 지속 추적
+            await enableBackgroundPriority();
+
+            showToast("🚶 새로운 이동경로 기록을 시작합니다! (화면을 꺼도 백그라운드 추적 유지)");
+
             if (!isLiveTracking) {
                 startLiveGpsTracking();
             }
@@ -4905,15 +6327,60 @@
 
         function stopTrackRecording() {
             isRecordingTrack = false;
+            isRecordingPaused = false;
             localStorage.setItem('smart_shelter_is_recording', 'false');
+            localStorage.removeItem('smart_shelter_is_paused');
             updateTrackButtonsUi();
-            showToast("⏸️ 이동경로 기록이 일시정지되었습니다.");
+            disableBackgroundPriority();
+
+            userTrackLayerGroup.clearLayers();
+
+            if (currentActiveTrack && currentActiveTrack.points && currentActiveTrack.points.length >= 2) {
+                const pts = currentActiveTrack.points;
+                const pauses = currentActiveTrack.pauses || [];
+                const endTime = Date.now();
+                const { totalMeters: totalM, shadowCount: shCount } = calcActiveTrackMetrics(pts, pauses);
+
+                const newSession = {
+                    id: currentActiveTrack.id,
+                    date: formatLocalDateKey(new Date(currentActiveTrack.startTime)),
+                    startTime: currentActiveTrack.startTime,
+                    endTime: endTime,
+                    durationSec: Math.max(1, Math.round((endTime - currentActiveTrack.startTime) / 1000)),
+                    distanceMeters: Math.round(totalM),
+                    pointCount: pts.length,
+                    shadowCount: shCount,
+                    points: pts,
+                    pauses: pauses
+                };
+
+                const sessions = getSavedTrackSessions();
+                sessions.unshift(newSession);
+                if (sessions.length > 100) sessions.pop();
+
+                try {
+                    localStorage.setItem(SESSIONS_STORAGE_KEY, JSON.stringify(sessions));
+                } catch (e) {
+                    console.warn("로컬스토리지 저장 용량 부족:", e);
+                }
+
+                showToast(`💾 이동경로 1건이 저장되었습니다! (${formatMeters(totalM)}, 정확도 원 및 일시정지 이력 포함)`);
+            } else {
+                showToast("⚠️ 이동 포인트가 부족하여 경로가 저장되지 않고 종료되었습니다.");
+            }
+
+            localStorage.removeItem(ACTIVE_SESSION_KEY);
+            currentActiveTrack = null;
+            updateActiveTrackStatsUi(0, 0, 0);
         }
 
         function updateTrackButtonsUi() {
             const btnToggle = document.getElementById('btn-toggle-recording');
             const txtToggle = document.getElementById('txt-toggle-recording');
             const iconToggle = document.getElementById('icon-toggle-rec');
+            const btnPause = document.getElementById('btn-pause-recording');
+            const txtPause = document.getElementById('txt-pause-recording');
+            const iconPause = document.getElementById('icon-pause-rec');
             const fabTrack = document.getElementById('fab-user-track');
 
             if (isRecordingTrack) {
@@ -4923,7 +6390,23 @@
                     btnToggle.style.borderColor = '#fca5a5';
                 }
                 if (txtToggle) txtToggle.innerText = '기록 정지';
-                if (iconToggle) iconToggle.className = 'fa-solid fa-pause';
+                if (iconToggle) iconToggle.className = 'fa-solid fa-stop';
+                if (btnPause) {
+                    btnPause.style.display = 'flex';
+                    if (isRecordingPaused) {
+                        btnPause.style.background = '#dbeafe';
+                        btnPause.style.color = '#1d4ed8';
+                        btnPause.style.borderColor = '#93c5fd';
+                        if (txtPause) txtPause.innerText = '계속하기';
+                        if (iconPause) iconPause.className = 'fa-solid fa-play';
+                    } else {
+                        btnPause.style.background = '#fef3c7';
+                        btnPause.style.color = '#b45309';
+                        btnPause.style.borderColor = '#fde68a';
+                        if (txtPause) txtPause.innerText = '일시정지';
+                        if (iconPause) iconPause.className = 'fa-solid fa-pause';
+                    }
+                }
                 if (fabTrack) fabTrack.classList.add('active');
             } else {
                 if (btnToggle) {
@@ -4933,58 +6416,753 @@
                 }
                 if (txtToggle) txtToggle.innerText = '기록 시작';
                 if (iconToggle) iconToggle.className = 'fa-solid fa-play';
+                if (btnPause) btnPause.style.display = 'none';
                 if (fabTrack) fabTrack.classList.remove('active');
             }
         }
 
-        function getSavedUserTrack() {
+        function getSavedTrackSessions() {
             try {
-                const raw = localStorage.getItem(TRACK_STORAGE_KEY);
+                const raw = localStorage.getItem(SESSIONS_STORAGE_KEY);
                 return raw ? JSON.parse(raw) : [];
             } catch (e) {
                 return [];
             }
         }
 
-        function recordUserTrackPoint(lat, lon, isShadow, dist, wifiName) {
-            const track = getSavedUserTrack();
-            const now = Date.now();
+        function recordUserTrackPoint(lat, lon, accuracy, isShadow, dist, wifiName) {
+            if (!isRecordingTrack || isRecordingPaused) return;
 
-            // 이전 지점과의 거리 계산 (GPS 미세 떨림 필터링 - 최소 4m 이동 시만 포인트 등록)
-            if (track.length > 0) {
-                const prev = track[track.length - 1];
+            if (!currentActiveTrack) {
+                const raw = localStorage.getItem(ACTIVE_SESSION_KEY);
+                if (raw) {
+                    try { currentActiveTrack = JSON.parse(raw); } catch (e) {}
+                }
+                if (!currentActiveTrack) {
+                    currentActiveTrack = { id: 'track_' + Date.now(), startTime: Date.now(), points: [], pauses: [] };
+                }
+            }
+
+            const now = Date.now();
+            const pts = currentActiveTrack.points;
+
+            // GPS 미세 떨림 필터링: 3m 미만 및 2초 이내 무시
+            if (pts.length > 0) {
+                const prev = pts[pts.length - 1];
                 const d = calcGeoDistanceMeters(prev.lat, prev.lon, lat, lon);
-                if (d < 4.0 && (now - prev.time < 15000)) {
-                    return; // 4m 미만 및 15초 이내 미세 떨림 무시
+                if (d < 3.0 && (now - prev.time < 2000)) {
+                    return;
                 }
             }
 
             const newPoint = {
                 lat: Number(lat.toFixed(6)),
                 lon: Number(lon.toFixed(6)),
+                accuracy: Math.round(accuracy || 15),
                 time: now,
                 is_shadow: Boolean(isShadow),
                 dist: Math.round(dist || 0),
                 wifi_name: wifiName || '공공 Wi-Fi'
             };
 
-            track.push(newPoint);
-
-            // 로컬스토리지 용량 보호 (최대 5,000 포인트 약 500km 경로 보관)
-            if (track.length > 5000) {
-                track.splice(0, track.length - 5000);
-            }
+            pts.push(newPoint);
 
             try {
-                localStorage.setItem(TRACK_STORAGE_KEY, JSON.stringify(track));
-            } catch (e) {
-                console.warn("로컬스토리지 저장 용량 부족:", e);
-            }
+                localStorage.setItem(ACTIVE_SESSION_KEY, JSON.stringify(currentActiveTrack));
+            } catch (e) {}
 
-            updateTrackStatsUi();
-            renderUserTrackOnMap();
+            renderActiveRecordingTrack(pts);
+
+            const { totalMeters: totalM, shadowCount: shCount } = calcActiveTrackMetrics(pts, currentActiveTrack.pauses || []);
+            updateActiveTrackStatsUi(totalM, pts.length, shCount);
         }
 
+        function isPauseGapSegment(p1, p2, pauses) {
+            if (!Array.isArray(pauses) || pauses.length === 0) return false;
+            return pauses.some(pause =>
+                pause.pauseTime && pause.pauseTime >= p1.time - 1500 && pause.pauseTime <= p2.time + 1500
+            );
+        }
+
+        function calcActiveTrackMetrics(pts, pauses) {
+            let totalMeters = 0;
+            let shadowCount = 0;
+            for (let i = 0; i < pts.length; i++) {
+                if (pts[i].is_shadow) shadowCount++;
+                if (i > 0 && !isPauseGapSegment(pts[i - 1], pts[i], pauses)) {
+                    totalMeters += calcGeoDistanceMeters(pts[i - 1].lat, pts[i - 1].lon, pts[i].lat, pts[i].lon);
+                }
+            }
+            return { totalMeters, shadowCount };
+        }
+
+        function drawTrackPolylinesWithPauseGaps(pts, pauses, baseOpacity = 0.85) {
+            const pauseList = Array.isArray(pauses) ? pauses : [];
+            for (let i = 1; i < pts.length; i++) {
+                const p1 = pts[i - 1];
+                const p2 = pts[i];
+
+                // 일시정지 구간(휴식/정차 중 이동 미기록 구간) 판별 -> 다른 색(#f59e0b) + 흐리게(0.62) + 일직선 점선
+                if (isPauseGapSegment(p1, p2, pauseList)) {
+                    L.polyline([[p1.lat, p1.lon], [p2.lat, p2.lon]], {
+                        color: '#f59e0b',
+                        weight: 3.5,
+                        opacity: 0.62,
+                        dashArray: '5, 8'
+                    }).bindTooltip('⏸️ 일시정지 구간 (이동 미기록)', { sticky: true }).addTo(userTrackLayerGroup);
+                } else {
+                    const isShadow = p1.is_shadow || p2.is_shadow;
+                    L.polyline([[p1.lat, p1.lon], [p2.lat, p2.lon]], {
+                        color: isShadow ? '#ef4444' : '#2563eb',
+                        weight: isShadow ? 5 : 4,
+                        opacity: baseOpacity,
+                        dashArray: isShadow ? '6, 6' : null
+                    }).addTo(userTrackLayerGroup);
+                }
+            }
+        }
+
+        function renderTrackPauseMarkers(pts, pauses) {
+            if (!Array.isArray(pauses) || pauses.length === 0) return;
+            pauses.forEach((pause, pIdx) => {
+                const pLat = pause.pauseLat || (pts[0] ? pts[0].lat : 0);
+                const pLon = pause.pauseLon || (pts[0] ? pts[0].lon : 0);
+                if (!pLat && !pLon) return;
+                const pauseDurSec = pause.resumeTime ? Math.max(0, Math.round((pause.resumeTime - pause.pauseTime) / 1000)) : 0;
+                const pauseDurText = pauseDurSec >= 60 ? `${Math.floor(pauseDurSec/60)}분 ${pauseDurSec%60}초` : `${pauseDurSec}초`;
+
+                L.circleMarker([pLat, pLon], {
+                    radius: 6,
+                    color: '#d97706',
+                    fillColor: '#fef3c7',
+                    fillOpacity: 1,
+                    weight: 2.5
+                }).bindPopup(`
+                    <div style="font-size:12px; line-height:1.4;">
+                        <b style="color:#d97706;">⏸️ 일시정지 (기록 중단) #${pIdx + 1}</b><br>
+                        정지 시각: ${formatTimeHMS(pause.pauseTime)}<br>
+                        ${pause.resumeTime ? `재개 시각: ${formatTimeHMS(pause.resumeTime)}<br>정지 시간: <b>${pauseDurText}</b>` : '정지 상태'}
+                    </div>
+                `).addTo(userTrackLayerGroup);
+
+                if (pause.resumeTime && pause.resumeLat && pause.resumeLon &&
+                    (Math.abs(pause.resumeLat - pLat) > 1e-6 || Math.abs(pause.resumeLon - pLon) > 1e-6)) {
+                    L.circleMarker([pause.resumeLat, pause.resumeLon], {
+                        radius: 6,
+                        color: '#059669',
+                        fillColor: '#d1fae5',
+                        fillOpacity: 1,
+                        weight: 2.5
+                    }).bindPopup(`
+                        <div style="font-size:12px; line-height:1.4;">
+                            <b style="color:#059669;">▶️ 기록 재개 (위치 다시 잡힘) #${pIdx + 1}</b><br>
+                            재개 시각: ${formatTimeHMS(pause.resumeTime)}<br>
+                            정지 시간: <b>${pauseDurText}</b>
+                        </div>
+                    `).addTo(userTrackLayerGroup);
+                }
+            });
+        }
+
+        function renderActiveRecordingTrack(pts) {
+            userTrackLayerGroup.clearLayers();
+            if (!Array.isArray(pts) || pts.length < 2) return;
+
+            const pauses = (currentActiveTrack && currentActiveTrack.pauses) ? currentActiveTrack.pauses : [];
+            drawTrackPolylinesWithPauseGaps(pts, pauses, 0.85);
+            renderTrackPauseMarkers(pts, pauses);
+        }
+
+        function updateActiveTrackStatsUi(meters, count, shadows) {
+            const distEl = document.getElementById('track-stat-distance');
+            const ptEl = document.getElementById('track-stat-points');
+            const shEl = document.getElementById('track-stat-shadows');
+
+            if (distEl) distEl.innerText = formatMeters(meters);
+            if (ptEl) ptEl.innerText = count + ' 개';
+            if (shEl) shEl.innerText = shadows + ' 회';
+        }
+
+        // ==============================================================================
+        // 날짜별 이동경로 보관함 모달 & 아코디언 핸들러
+        // ==============================================================================
+        function openTrackHistoryModal() {
+            renderTrackHistoryList();
+            document.getElementById('track-history-modal-overlay').classList.add('active');
+        }
+
+        function closeTrackHistoryModal() {
+            document.getElementById('track-history-modal-overlay').classList.remove('active');
+        }
+
+        function renderTrackHistoryList() {
+            const container = document.getElementById('track-history-body');
+            if (!container) return;
+
+            const sessions = getSavedTrackSessions();
+            if (sessions.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align:center; padding:36px 16px; color:#64748b;">
+                        <i class="fa-solid fa-route" style="font-size:36px; color:#cbd5e1; margin-bottom:12px; display:block;"></i>
+                        <b style="font-size:14px; color:#334155;">저장된 이동경로가 없습니다.</b>
+                        <p style="font-size:12px; margin-top:6px; color:#94a3b8;">
+                            '기록 시작' 버튼을 누르고 이동하시면 안전하게 건별로 자동 보관됩니다.
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+
+            // 날짜(date) 기준 그룹화
+            const groups = {};
+            sessions.forEach(s => {
+                const k = s.date || '기타';
+                if (!groups[k]) groups[k] = [];
+                groups[k].push(s);
+            });
+
+            // 날짜 내림차순 정렬
+            const sortedDates = Object.keys(groups).sort((a, b) => b.localeCompare(a));
+
+            let html = '';
+            sortedDates.forEach((dateKey, idx) => {
+                const list = groups[dateKey];
+                // 기본적으로 첫 번째 날짜는 펼침 상태
+                const isOpen = (openedDateAccordions[dateKey] !== undefined) ? openedDateAccordions[dateKey] : (idx === 0);
+                let dayTotalDist = 0;
+                list.forEach(item => { dayTotalDist += (item.distanceMeters || 0); });
+
+                html += `
+                    <div class="date-accordion-item" id="acc-${dateKey}">
+                        <div class="date-accordion-header ${isOpen ? 'open' : ''}" onclick="toggleDateAccordion('${dateKey}')">
+                            <div class="date-title">
+                                <i class="fa-solid fa-calendar-day" style="color:#2563eb;"></i>
+                                <span>${formatDisplayDate(dateKey)}</span>
+                                <span class="date-count-badge">${list.length}건</span>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <span style="font-size:12px; color:#64748b; font-weight:700;">총 ${formatMeters(dayTotalDist)}</span>
+                                <i class="fa-solid fa-chevron-down date-arrow ${isOpen ? 'fa-rotate-180' : ''}" id="arrow-${dateKey}"></i>
+                            </div>
+                        </div>
+                        <div class="date-session-container ${isOpen ? 'open' : ''}" id="container-${dateKey}">
+                `;
+
+                list.forEach(s => {
+                    const startStr = formatTimeHMS(s.startTime);
+                    const endStr = formatTimeHMS(s.endTime);
+                    const durStr = formatDuration(s.durationSec);
+                    const distStr = formatMeters(s.distanceMeters);
+
+                    html += `
+                        <div class="session-card" id="card-${s.id}">
+                            <div class="session-header">
+                                <span class="session-time-text">
+                                    <i class="fa-regular fa-clock" style="color:#2563eb;"></i>
+                                    ${startStr} ~ ${endStr}
+                                </span>
+                                <span class="session-duration-tag">${durStr}</span>
+                            </div>
+                            <div class="session-metrics">
+                                <span><i class="fa-solid fa-route" style="color:#0284c7;"></i> ${distStr}</span>
+                                <span><i class="fa-solid fa-location-dot" style="color:#10b981;"></i> ${s.pointCount}개 포인트</span>
+                                <span style="color:#ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> 음영 ${s.shadowCount || 0}회</span>
+                            </div>
+                            <div class="session-actions">
+                                <button class="session-btn primary" onclick="loadTrackSessionToMap('${s.id}')" title="지도에 경로 표시">
+                                    <i class="fa-solid fa-map-location-dot"></i> 지도에 불러오기
+                                </button>
+                                <button class="session-btn sim" onclick="startTrackSimulation('${s.id}')" title="네비게이션 모의 주행 시뮬레이션">
+                                    <i class="fa-solid fa-car-side"></i> 미리주행
+                                </button>
+                                <button class="session-btn del" onclick="deleteTrackSession('${s.id}')" title="삭제">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += `
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function toggleDateAccordion(dateKey) {
+            const header = document.querySelector(`#acc-${dateKey} .date-accordion-header`);
+            const container = document.getElementById(`container-${dateKey}`);
+            const arrow = document.getElementById(`arrow-${dateKey}`);
+
+            if (!container) return;
+            const isOpen = container.classList.contains('open');
+            if (isOpen) {
+                container.classList.remove('open');
+                if (header) header.classList.remove('open');
+                if (arrow) arrow.classList.remove('fa-rotate-180');
+                openedDateAccordions[dateKey] = false;
+            } else {
+                container.classList.add('open');
+                if (header) header.classList.add('open');
+                if (arrow) arrow.classList.add('fa-rotate-180');
+                openedDateAccordions[dateKey] = true;
+            }
+        }
+
+        function loadTrackSessionToMap(sessionId) {
+            const sessions = getSavedTrackSessions();
+            const session = sessions.find(s => s.id === sessionId);
+            if (!session || !session.points || session.points.length < 2) {
+                alert("불러올 수 있는 유효한 경로 좌표가 없습니다.");
+                return;
+            }
+
+            // 시뮬레이션 중지 및 모달 닫기
+            stopTrackSimulation(false);
+            closeTrackHistoryModal();
+
+            loadedTrackSession = session;
+            userTrackLayerGroup.clearLayers();
+
+            const btnClear = document.getElementById('btn-clear-loaded-track');
+            if (btnClear) btnClear.style.display = 'flex';
+
+            const pts = session.points;
+
+            // 1. 선분 그리기 (일시정지 미기록 점프 구간 포함)
+            drawTrackPolylinesWithPauseGaps(pts, session.pauses || [], 0.9);
+
+            // 1-2. 실제 수신된 GPS 정확도 원 (Accuracy Circle) 렌더링
+            const step = Math.max(1, Math.floor(pts.length / 25)); // 최대 25개 주요 지점의 정확도 원 표출
+            for (let i = 0; i < pts.length; i += step) {
+                const pt = pts[i];
+                if (pt.accuracy) {
+                    L.circle([pt.lat, pt.lon], {
+                        radius: pt.accuracy,
+                        color: pt.is_shadow ? '#ef4444' : '#3b82f6',
+                        weight: 1,
+                        fillColor: pt.is_shadow ? '#fca5a5' : '#bfdbfe',
+                        fillOpacity: 0.12,
+                        dashArray: '2, 4'
+                    }).bindPopup(`
+                        <div style="font-size:11.5px; line-height:1.4;">
+                            <b>🎯 당시 GPS 측정 오차 범위</b><br>
+                            정확도 반경: <b>±${pt.accuracy}m</b><br>
+                            기록 시각: ${formatTimeHMS(pt.time)}
+                        </div>
+                    `).addTo(userTrackLayerGroup);
+                }
+            }
+
+            // 1-3. 일시정지했던 지점(휴식/정차) 마커 렌더링
+            renderTrackPauseMarkers(pts, session.pauses || []);
+
+            // 2. 출발 지점 마커 (초록 깃발)
+            const start = pts[0];
+            L.circleMarker([start.lat, start.lon], {
+                radius: 7,
+                color: '#10b981',
+                fillColor: '#ffffff',
+                fillOpacity: 1,
+                weight: 3
+            }).bindPopup(`
+                <div style="font-size:12px; line-height:1.4;">
+                    <b style="color:#10b981;">🏁 출발 지점</b><br>
+                    시간: ${formatTimeHMS(start.time)}
+                </div>
+            `).addTo(userTrackLayerGroup);
+
+            // 3. 도착 지점 마커 (빨간 깃발)
+            const end = pts[pts.length - 1];
+            L.circleMarker([end.lat, end.lon], {
+                radius: 7,
+                color: '#ef4444',
+                fillColor: '#ffffff',
+                fillOpacity: 1,
+                weight: 3
+            }).bindPopup(`
+                <div style="font-size:12px; line-height:1.4;">
+                    <b style="color:#ef4444;">🛑 도착 지점</b><br>
+                    시간: ${formatTimeHMS(end.time)}
+                </div>
+            `).addTo(userTrackLayerGroup);
+
+            // 4. 경로가 화면에 꽉 차도록 지도 줌인/줌아웃
+            const latlngs = pts.map(p => [p.lat, p.lon]);
+            map.fitBounds(L.latLngBounds(latlngs), { padding: [60, 60], maxZoom: 17 });
+
+            // 5. 미리주행 대기 HUD 표시
+            openSimHudReady(session);
+
+            showToast(`🗺️ [${session.date}] ${formatTimeHM(session.startTime)} ~ ${formatTimeHM(session.endTime)} 경로가 지도에 표시되었습니다.`);
+        }
+
+        function clearLoadedTrackFromMap(silent = false) {
+            userTrackLayerGroup.clearLayers();
+            loadedTrackSession = null;
+            const hud = document.getElementById('track-sim-hud');
+            if (hud) hud.style.display = 'none';
+            const btnClear = document.getElementById('btn-clear-loaded-track');
+            if (btnClear) btnClear.style.display = 'none';
+
+            // 실시간 기록 중이었다면 현재 기록 중인 경로 다시 그리기
+            if (isRecordingTrack && currentActiveTrack && currentActiveTrack.points && currentActiveTrack.points.length >= 2) {
+                renderActiveRecordingTrack(currentActiveTrack.points);
+            }
+            if (!silent) {
+                showToast("🧹 지도에서 불러온 이동경로 선을 지웠습니다.");
+            }
+        }
+
+        function deleteTrackSession(sessionId) {
+            if (!confirm("이 경로 기록을 영구 삭제하시겠습니까?")) return;
+
+            let sessions = getSavedTrackSessions();
+            sessions = sessions.filter(s => s.id !== sessionId);
+
+            try {
+                localStorage.setItem(SESSIONS_STORAGE_KEY, JSON.stringify(sessions));
+            } catch (e) {}
+
+            if (loadedTrackSession && loadedTrackSession.id === sessionId) {
+                stopTrackSimulation(false);
+                clearLoadedTrackFromMap(true);
+            }
+
+            renderTrackHistoryList();
+            showToast("🗑️ 해당 이동경로가 삭제되었습니다.");
+        }
+
+        function clearAllUserTracks() {
+            if (!confirm("기기에 저장된 모든 이동경로 기록을 영구 삭제하시겠습니까?\n(외부 서버 저장이 없어 삭제 시 복구할 수 없습니다)")) {
+                return;
+            }
+
+            stopTrackSimulation(false);
+            clearLoadedTrackFromMap(true);
+
+            localStorage.removeItem(SESSIONS_STORAGE_KEY);
+            localStorage.removeItem(ACTIVE_SESSION_KEY);
+            currentActiveTrack = null;
+
+            renderTrackHistoryList();
+            showToast("🗑️ 저장된 모든 이동경로가 기기에서 영구 삭제되었습니다.");
+        }
+
+        // ==============================================================================
+        // 네비게이션 모의 주행 (미리주행 시뮬레이션) 엔진
+        // ==============================================================================
+        function openSimHudReady(session) {
+            simSession = session;
+            const pts = session.points;
+
+            // 누적 거리 배열 사전 계산
+            simCumDistances = [0];
+            simTotalDistance = 0;
+            for (let i = 1; i < pts.length; i++) {
+                const segD = calcGeoDistanceMeters(pts[i-1].lat, pts[i-1].lon, pts[i].lat, pts[i].lon);
+                simTotalDistance += segD;
+                simCumDistances.push(simTotalDistance);
+            }
+
+            // 실제 기록된 전체 타임스탬프 구간(ms) 계산 (1x = 실제 이동시간 기준)
+            const firstT = pts[0] && pts[0].time ? Number(pts[0].time) : 0;
+            const lastT = pts[pts.length - 1] && pts[pts.length - 1].time ? Number(pts[pts.length - 1].time) : 0;
+            simTotalDurationMs = (firstT > 0 && lastT > firstT)
+                ? (lastT - firstT)
+                : Math.max(1000, (session.durationSec || 10) * 1000);
+
+            simProgress = 0;
+            simIsPlaying = false;
+
+            const hud = document.getElementById('track-sim-hud');
+            if (hud) hud.style.display = 'flex';
+
+            const labelEl = document.getElementById('sim-hud-label');
+            if (labelEl) labelEl.innerText = `${session.date} (${formatTimeHM(session.startTime)} ~ ${formatTimeHM(session.endTime)})`;
+
+            const slider = document.getElementById('sim-progress-slider');
+            if (slider) slider.value = 0;
+
+            const timeEl = document.getElementById('sim-time-display');
+            if (timeEl) timeEl.innerText = `00:00 / ${formatDuration(simTotalDurationMs / 1000)}`;
+
+            const distEl = document.getElementById('sim-dist-display');
+            if (distEl) distEl.innerText = `0 m / ${formatMeters(simTotalDistance)}`;
+
+            updateSimPlayButtonUi(false);
+            updateSimSpeedButtonUi();
+
+            // 차량 시작점 마커 초기화
+            initOrMoveCarMarker(pts[0].lat, pts[0].lon, calcBearing(pts[0].lat, pts[0].lon, pts[1].lat, pts[1].lon), pts[0].is_shadow, pts[0].dist, pts[0].wifi_name);
+        }
+
+        function startTrackSimulation(sessionId) {
+            loadTrackSessionToMap(sessionId);
+            setTimeout(() => {
+                toggleSimPlayPause();
+            }, 300);
+        }
+
+        function toggleSimPlayPause() {
+            if (!simSession) return;
+
+            if (simIsPlaying) {
+                pauseSim();
+            } else {
+                playSim();
+            }
+        }
+
+        function playSim() {
+            if (!simSession) return;
+            if (simProgress >= 1.0) {
+                simProgress = 0; // 끝에 도달해 있으면 처음부터 다시 시작
+            }
+            simIsPlaying = true;
+            updateSimPlayButtonUi(true);
+
+            // 약 50ms 주기 틱 - 1x 배속은 실제 기록된 타임스탬프 경과 시간(simTotalDurationMs)과 1:1 동기화
+            const tickIntervalMs = 50;
+            const effectiveDurMs = Math.max(1000, simTotalDurationMs || 10000);
+
+            if (simAnimTimer) clearInterval(simAnimTimer);
+
+            simAnimTimer = setInterval(() => {
+                if (!simIsPlaying) {
+                    clearInterval(simAnimTimer);
+                    return;
+                }
+
+                simProgress += (tickIntervalMs * simSpeed) / effectiveDurMs;
+
+                if (simProgress >= 1.0) {
+                    simProgress = 1.0;
+                    updateSimPosition(true);
+                    pauseSim();
+                    showToast(`🏁 [미리주행 완료] 총 ${formatMeters(simTotalDistance)} 주행을 완료했습니다!`);
+                    document.getElementById('txt-sim-play').innerText = '다시 주행';
+                    document.getElementById('icon-sim-play').className = 'fa-solid fa-rotate-left';
+                    return;
+                }
+
+                updateSimPosition(false);
+            }, tickIntervalMs);
+        }
+
+        function pauseSim() {
+            simIsPlaying = false;
+            if (simAnimTimer) {
+                clearInterval(simAnimTimer);
+                simAnimTimer = null;
+            }
+            updateSimPlayButtonUi(false);
+        }
+
+        function restartTrackSimulation() {
+            pauseSim();
+            simProgress = 0;
+            updateSimPosition(false);
+            playSim();
+        }
+
+        function cycleSimSpeed() {
+            const speeds = [1, 2, 4, 8, 10, 20, 50, 100];
+            const idx = speeds.indexOf(simSpeed);
+            const nextIdx = (idx === -1 ? 0 : idx + 1) % speeds.length;
+            simSpeed = speeds[nextIdx];
+            updateSimSpeedButtonUi();
+            showToast(`⚡ 주행 배속: ${simSpeed}x 배속`);
+        }
+
+        function updateSimSpeedButtonUi() {
+            const txt = document.getElementById('txt-sim-speed');
+            if (txt) txt.innerText = `배속: ${simSpeed}x`;
+        }
+
+        function updateSimPlayButtonUi(isPlaying) {
+            const btn = document.getElementById('btn-sim-play-pause');
+            const icon = document.getElementById('icon-sim-play');
+            const txt = document.getElementById('txt-sim-play');
+
+            if (isPlaying) {
+                if (icon) icon.className = 'fa-solid fa-pause';
+                if (txt) txt.innerText = '일시정지';
+            } else {
+                if (icon) icon.className = 'fa-solid fa-play';
+                if (txt) txt.innerText = '재생';
+            }
+        }
+
+        function onSimSliderInput(val) {
+            simProgress = val / 1000;
+            updateSimPosition(false);
+        }
+
+        function updateSimPosition(panSmooth = false) {
+            if (!simSession || simCumDistances.length < 2) return;
+            const pts = simSession.points;
+            const firstT = pts[0] && pts[0].time ? Number(pts[0].time) : 0;
+            const lastT = pts[pts.length - 1] && pts[pts.length - 1].time ? Number(pts[pts.length - 1].time) : 0;
+            const hasTimestamps = (firstT > 0 && lastT > firstT);
+
+            let idx = 0;
+            let ratio = 0;
+
+            if (hasTimestamps) {
+                // 실제 기록 타임스탬프 기반 선분 인덱스 & 보간 비율 산출
+                const targetTime = firstT + simProgress * (lastT - firstT);
+                for (let i = 0; i < pts.length - 1; i++) {
+                    if (targetTime >= pts[i].time && targetTime <= pts[i + 1].time) {
+                        idx = i;
+                        break;
+                    }
+                    if (i === pts.length - 2) idx = i;
+                }
+                const tSpan = pts[idx + 1].time - pts[idx].time;
+                ratio = tSpan > 0 ? Math.max(0, Math.min(1, (targetTime - pts[idx].time) / tSpan)) : 0;
+            } else {
+                const targetDist = simProgress * simTotalDistance;
+                for (let i = 0; i < simCumDistances.length - 1; i++) {
+                    if (targetDist >= simCumDistances[i] && targetDist <= simCumDistances[i + 1]) {
+                        idx = i;
+                        break;
+                    }
+                }
+                const segLen = (simCumDistances[idx + 1] - simCumDistances[idx]) || 1;
+                ratio = Math.max(0, Math.min(1, (targetDist - simCumDistances[idx]) / segLen));
+            }
+
+            const p1 = pts[idx];
+            const p2 = pts[Math.min(idx + 1, pts.length - 1)];
+            const segDistLen = (simCumDistances[idx + 1] || 0) - (simCumDistances[idx] || 0);
+            const curDist = (simCumDistances[idx] || 0) + segDistLen * ratio;
+
+            // 보간된 실시간 위도/경도
+            const curLat = p1.lat + (p2.lat - p1.lat) * ratio;
+            const curLon = p1.lon + (p2.lon - p1.lon) * ratio;
+            const bearing = calcBearing(p1.lat, p1.lon, p2.lat, p2.lon);
+            const isShadow = (ratio < 0.5) ? p1.is_shadow : p2.is_shadow;
+            const dist = (ratio < 0.5) ? p1.dist : p2.dist;
+            const wifiName = (ratio < 0.5) ? p1.wifi_name : p2.wifi_name;
+
+            // 차량 마커 이동 및 회전
+            initOrMoveCarMarker(curLat, curLon, bearing, isShadow, dist, wifiName);
+
+            // 실시간 카메라 트래킹 (지도 중심이 부드럽게 차량을 추종)
+            if (map.getZoom() < 16) {
+                map.setZoom(16);
+            }
+            map.panTo([curLat, curLon], { animate: false });
+
+            // UI 슬라이더 및 통계 표시 갱신
+            const slider = document.getElementById('sim-progress-slider');
+            if (slider) slider.value = Math.round(simProgress * 1000);
+
+            const totalDurSec = Math.max(1, Math.round((simTotalDurationMs || (simSession.durationSec * 1000)) / 1000));
+            const curElapsedSec = Math.max(0, Math.round(simProgress * totalDurSec));
+            const timeEl = document.getElementById('sim-time-display');
+            if (timeEl) timeEl.innerText = `${formatDuration(curElapsedSec)} / ${formatDuration(totalDurSec)}`;
+
+            const distEl = document.getElementById('sim-dist-display');
+            if (distEl) distEl.innerText = `${formatMeters(curDist)} / ${formatMeters(simTotalDistance)}`;
+        }
+
+        function initOrMoveCarMarker(lat, lon, bearing, isShadow, dist, wifiName, accuracy = 15) {
+            const rotAngle = (bearing - 45); // fa-location-arrow 기본 45도 보정
+
+            if (!simCarMarker) {
+                const icon = L.divIcon({
+                    className: 'sim-car-marker',
+                    html: `
+                        <div class="sim-car-bubble ${isShadow ? 'shadow-zone' : ''}" id="sim-car-bubble">
+                            <i class="fa-solid fa-location-arrow" id="sim-car-icon" style="transform: rotate(${rotAngle}deg);"></i>
+                        </div>
+                    `,
+                    iconSize: [34, 34],
+                    iconAnchor: [17, 17]
+                });
+
+                simCarMarker = L.marker([lat, lon], { icon: icon, zIndexOffset: 3500 }).addTo(userTrackLayerGroup);
+            } else {
+                simCarMarker.setLatLng([lat, lon]);
+                const bubble = document.getElementById('sim-car-bubble');
+                const icon = document.getElementById('sim-car-icon');
+
+                if (bubble) {
+                    if (isShadow) {
+                        bubble.classList.add('shadow-zone');
+                    } else {
+                        bubble.classList.remove('shadow-zone');
+                    }
+                }
+                if (icon) {
+                    icon.style.transform = `rotate(${rotAngle}deg)`;
+                }
+            }
+
+            // 시뮬레이션 차량 주변 당시 실제 GPS 정확도 원 (Accuracy Circle) 동적 갱신
+            if (!simAccuracyCircle) {
+                simAccuracyCircle = L.circle([lat, lon], {
+                    radius: accuracy,
+                    color: isShadow ? '#ef4444' : '#3b82f6',
+                    weight: 1,
+                    fillColor: isShadow ? '#fca5a5' : '#bfdbfe',
+                    fillOpacity: 0.15,
+                    dashArray: '2, 4'
+                }).addTo(userTrackLayerGroup);
+            } else {
+                simAccuracyCircle.setLatLng([lat, lon]);
+                simAccuracyCircle.setRadius(accuracy);
+                simAccuracyCircle.setStyle({
+                    color: isShadow ? '#ef4444' : '#3b82f6',
+                    fillColor: isShadow ? '#fca5a5' : '#bfdbfe'
+                });
+            }
+
+            // HUD 통신 상태 뱃지 갱신
+            const badge = document.getElementById('sim-status-badge');
+            if (badge) {
+                if (isShadow) {
+                    badge.className = 'sim-badge shadow';
+                    badge.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> 음영 구간 (${dist}m 이격)`;
+                } else {
+                    badge.className = 'sim-badge wifi';
+                    badge.innerHTML = `<i class="fa-solid fa-wifi"></i> 연결 양호 (${wifiName})`;
+                }
+            }
+        }
+
+        function stopTrackSimulation(clearLoaded = false) {
+            pauseSim();
+            if (simCarMarker) {
+                userTrackLayerGroup.removeLayer(simCarMarker);
+                simCarMarker = null;
+            }
+            if (simAccuracyCircle) {
+                userTrackLayerGroup.removeLayer(simAccuracyCircle);
+                simAccuracyCircle = null;
+            }
+            const hud = document.getElementById('track-sim-hud');
+            if (hud) hud.style.display = 'none';
+            if (clearLoaded && loadedTrackSession) {
+                clearLoadedTrackFromMap(true);
+            }
+        }
+
+        function fitBoundsToActiveTrack() {
+            if (loadedTrackSession && loadedTrackSession.points) {
+                const latlngs = loadedTrackSession.points.map(p => [p.lat, p.lon]);
+                map.fitBounds(L.latLngBounds(latlngs), { padding: [60, 60], maxZoom: 17 });
+            }
+        }
+
+        // ==============================================================================
+        // 유틸리티 함수 (좌표 거리, 방위각, 날짜/시간 포맷팅)
+        // ==============================================================================
         function calcGeoDistanceMeters(lat1, lon1, lat2, lon2) {
             const R = 6371000;
             const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -4996,114 +7174,109 @@
             return R * c;
         }
 
-        function updateTrackStatsUi() {
-            const track = getSavedUserTrack();
-            let totalMeters = 0;
-            let shadowCount = 0;
+        function calcBearing(lat1, lon1, lat2, lon2) {
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const y = Math.sin(dLon) * Math.cos(lat2 * Math.PI / 180);
+            const x = Math.cos(lat1 * Math.PI / 180) * Math.sin(lat2 * Math.PI / 180) -
+                      Math.sin(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.cos(dLon);
+            return (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
+        }
 
-            for (let i = 0; i < track.length; i++) {
-                if (track[i].is_shadow) shadowCount++;
-                if (i > 0) {
-                    totalMeters += calcGeoDistanceMeters(track[i-1].lat, track[i-1].lon, track[i].lat, track[i].lon);
+        function formatLocalDateKey(d) {
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function formatDisplayDate(dateKey) {
+            try {
+                const parts = dateKey.split('-');
+                if (parts.length === 3) {
+                    const d = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+                    const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
+                    return `${parts[0]}년 ${parts[1]}월 ${parts[2]}일 (${weekdays[d.getDay()]})`;
                 }
-            }
-
-            const distStr = totalMeters >= 1000 ? (totalMeters / 1000).toFixed(2) + ' km' : Math.round(totalMeters) + ' m';
-            const distEl = document.getElementById('track-stat-distance');
-            const ptEl = document.getElementById('track-stat-points');
-            const shEl = document.getElementById('track-stat-shadows');
-
-            if (distEl) distEl.innerText = distStr;
-            if (ptEl) ptEl.innerText = track.length + ' 개';
-            if (shEl) shEl.innerText = shadowCount + ' 회';
+            } catch (e) {}
+            return dateKey;
         }
 
-        function renderUserTrackOnMap() {
-            userTrackLayerGroup.clearLayers();
-            if (!isTrackVisible) return;
-
-            const track = getSavedUserTrack();
-            if (track.length === 0) return;
-
-            // 경로 선분 그리기 (음영 구간은 붉은색, Wi-Fi 커버리지 구간은 파란색으로 시각화)
-            for (let i = 1; i < track.length; i++) {
-                const p1 = track[i - 1];
-                const p2 = track[i];
-                const isShadowSegment = p1.is_shadow || p2.is_shadow;
-
-                L.polyline([[p1.lat, p1.lon], [p2.lat, p2.lon]], {
-                    color: isShadowSegment ? '#ef4444' : '#2563eb',
-                    weight: isShadowSegment ? 5 : 4,
-                    opacity: 0.85,
-                    dashArray: isShadowSegment ? '6, 6' : null
-                }).addTo(userTrackLayerGroup);
-            }
-
-            // 시작점 마커
-            if (track.length > 0) {
-                const start = track[0];
-                L.circleMarker([start.lat, start.lon], {
-                    radius: 5,
-                    color: '#10b981',
-                    fillColor: '#10b981',
-                    fillOpacity: 1,
-                    weight: 2
-                }).bindPopup(`<b>🏁 이동경로 시작점</b><br>시간: ${new Date(start.time).toLocaleTimeString()}`).addTo(userTrackLayerGroup);
-            }
-
-            // 최근 5개 포인트 인터랙티브 툴팁
-            const recent = track.slice(-5);
-            recent.forEach(pt => {
-                L.circleMarker([pt.lat, pt.lon], {
-                    radius: 3.5,
-                    color: pt.is_shadow ? '#ef4444' : '#3b82f6',
-                    fillColor: '#ffffff',
-                    fillOpacity: 1,
-                    weight: 2
-                }).bindPopup(`
-                    <div style="font-size:12px; line-height:1.4;">
-                        <b>${pt.is_shadow ? '⚠️ 통신 음영 구간' : '📶 Wi-Fi 연결 구역'}</b><br>
-                        시간: ${new Date(pt.time).toLocaleTimeString()}<br>
-                        최단 Wi-Fi: ${pt.wifi_name} (${pt.dist}m)
-                    </div>
-                `).addTo(userTrackLayerGroup);
-            });
+        function formatTimeHM(ts) {
+            const d = new Date(ts);
+            return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
         }
 
-        function toggleTrackVisibility() {
-            isTrackVisible = !isTrackVisible;
-            const txtVis = document.getElementById('txt-toggle-visibility');
-            const iconVis = document.getElementById('icon-toggle-vis');
-
-            if (isTrackVisible) {
-                if (txtVis) txtVis.innerText = '경로 숨김';
-                if (iconVis) iconVis.className = 'fa-solid fa-eye';
-                renderUserTrackOnMap();
-                showToast("👁️ 이동경로가 지도에 표시됩니다.");
-            } else {
-                if (txtVis) txtVis.innerText = '경로 표시';
-                if (iconVis) iconVis.className = 'fa-solid fa-eye-slash';
-                userTrackLayerGroup.clearLayers();
-                showToast("경로가 지도에서 숨겨졌습니다.");
-            }
+        function formatTimeHMS(ts) {
+            const d = new Date(ts);
+            return String(d.getHours()).padStart(2, '0') + ':' +
+                   String(d.getMinutes()).padStart(2, '0') + ':' +
+                   String(d.getSeconds()).padStart(2, '0');
         }
 
-        function clearUserTrack() {
-            if (!confirm("기기에 저장된 모든 이동경로 데이터를 영구 삭제하시겠습니까?\n(외부 서버 저장이 없어 삭제 시 복구할 수 없습니다)")) {
-                return;
+        function formatDuration(sec) {
+            const s = Math.round(sec);
+            if (s >= 3600) {
+                const h = Math.floor(s / 3600);
+                const m = Math.floor((s % 3600) / 60);
+                return `${h}시간 ${m}분`;
             }
-
-            localStorage.removeItem(TRACK_STORAGE_KEY);
-            userTrackLayerGroup.clearLayers();
-            updateTrackStatsUi();
-            showToast("🗑️ 저장된 모든 이동경로가 기기에서 안전하게 영구 삭제되었습니다.");
+            const m = Math.floor(s / 60);
+            const remSec = s % 60;
+            return m > 0 ? `${m}분 ${remSec}초` : `${remSec}초`;
         }
 
-        // 초기 로드 시 기존 저장된 트랙 렌더링 및 UI 동기화
+        function formatMeters(m) {
+            return (m >= 1000) ? (m / 1000).toFixed(2) + ' km' : Math.round(m) + ' m';
+        }
+
+        function migrateOldTrackIfNeeded() {
+            try {
+                const oldRaw = localStorage.getItem('smart_shelter_user_track');
+                const sessionsRaw = localStorage.getItem(SESSIONS_STORAGE_KEY);
+                if (oldRaw && (!sessionsRaw || JSON.parse(sessionsRaw).length === 0)) {
+                    const oldPts = JSON.parse(oldRaw);
+                    if (Array.isArray(oldPts) && oldPts.length >= 2) {
+                        const startT = oldPts[0].time || (Date.now() - 3600000);
+                        const endT = oldPts[oldPts.length - 1].time || Date.now();
+                        let totalM = 0;
+                        let shCount = 0;
+                        for (let i = 0; i < oldPts.length; i++) {
+                            if (oldPts[i].is_shadow) shCount++;
+                            if (i > 0) totalM += calcGeoDistanceMeters(oldPts[i-1].lat, oldPts[i-1].lon, oldPts[i].lat, oldPts[i].lon);
+                        }
+                        const firstSession = {
+                            id: 'track_' + startT,
+                            date: formatLocalDateKey(new Date(startT)),
+                            startTime: startT,
+                            endTime: endT,
+                            durationSec: Math.max(1, Math.round((endT - startT) / 1000)),
+                            distanceMeters: Math.round(totalM),
+                            pointCount: oldPts.length,
+                            shadowCount: shCount,
+                            points: oldPts
+                        };
+                        localStorage.setItem(SESSIONS_STORAGE_KEY, JSON.stringify([firstSession]));
+                    }
+                }
+            } catch (e) {}
+        }
+
+        // 초기 로드 시 마이그레이션 및 UI 상태 초기화
         setTimeout(() => {
+            migrateOldTrackIfNeeded();
             updateTrackButtonsUi();
-            updateTrackStatsUi();
-            renderUserTrackOnMap();
+            // 활성 세션 복구 여부 확인
+            const activeRaw = localStorage.getItem(ACTIVE_SESSION_KEY);
+            if (activeRaw && isRecordingTrack) {
+                try {
+                    currentActiveTrack = JSON.parse(activeRaw);
+                    const pts = currentActiveTrack.points || [];
+                    const pauses = currentActiveTrack.pauses || [];
+                    renderActiveRecordingTrack(pts);
+                    const { totalMeters, shadowCount } = calcActiveTrackMetrics(pts, pauses);
+                    updateActiveTrackStatsUi(totalMeters, pts.length, shadowCount);
+                } catch (e) {}
+            }
         }, 800);
 
         // ==============================================================================

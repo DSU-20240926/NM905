@@ -78,6 +78,19 @@ API_ENDPOINT = "http://api.odcloud.kr/api/15067528/v1/uddi:eb02ec03-6edd-4cb0-88
 TOUR_API_ENDPOINT = "http://apis.data.go.kr/B551011/KorService1/searchFestival1"
 TOUR_API_BACKUP = "http://api.visitkorea.or.kr/openapi/service/rest/KorService/searchFestival"
 
+# 5-1. 신규 문화/축제/행사 Open API (전국문화축제표준데이터 & 한국문화정보원)
+FESTIVAL_STD_API_KEY = (
+    os.environ.get("FESTIVAL_STD_API_KEY") or
+    PUBLIC_DATA_PORTAL_API_KEY
+).strip()
+FESTIVAL_STD_ENDPOINT = "https://api.data.go.kr/openapi/tn_pubr_public_cltur_fstvl_api"
+
+CULTURE_INFO_API_KEY = (
+    os.environ.get("CULTURE_INFO_API_KEY") or
+    PUBLIC_DATA_PORTAL_API_KEY
+).strip()
+CULTURE_INFO_ENDPOINT = "https://apis.data.go.kr/B553457/cultureinfo/area2"
+
 # 6. 한국방송통신전파진흥원(KCA) 산악지역 이동통신 기지국 Open API 키 및 엔드포인트
 MOUNTAIN_API_KEY = (
     os.environ.get("MOUNTAIN_API_KEY") or
